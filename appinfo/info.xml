@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<info>
+    <id>user_servervars2</id>
+    <name>ServerVars2</name>
+    <description>Simple app that does some computing</description>
+    <version>1.0</version>
+    <licence>AGPL</licence>
+    <author>Marc DeXeT</author>
+    <require>6.0</require>
+    <shipped>true</shipped>
+    <types>
+    	<type>prelogin</type>
+    	<type>authentication</type>
+    </types>
+</info>
