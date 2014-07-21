@@ -21,27 +21,41 @@
  */
  namespace OCA\User_Servervars2\Service;
 
+ use OCA\User_Servervars2\Backend\MetadataProvider;
+ use OCA\User_Servervars2\Service\Context;
+
  class UserService {
 
  	var $context;
+ 	var $metadataProvider;
 
-
- 	public function __construct(IContext $context) {
+ 	public function __construct(Context $context, MetadataProvider $metadataProvider) {
  		$this->context = $context;
+		$this->metadataProvider = $metadataProvider;
  	}
 
 
  	public function checkTokens() {
- 		$callback = $this->context->isUserMatchingProviderCallBack();
+ 		
  		$uid = $this->context->getUserId();
- 		$provider = $this->context->getProvider();
- 		return call_user_func($callback, $uid, $provider);
+ 		if ( empty($uid)) {
+ 			return false;
+ 		}
+
+ 		$providerId 	= $this->context->getProviderId();
+ 		if ( empty($providerId)) {
+ 			return false;
+ 		}
+ 		$attributeName  = $this->metadataProvider->getUserIdAttributeName($providerId);
+ 		$scopeValidator = $this->metadataProvider->getScopeValidator($providerId, $attributeName);
+ 		if ( $scopeValidator ) {
+ 			return $scopeValidator->valid(array($uid));
+ 		}
+ 		return true;
  	}
 
- 	/**
- 	* 
- 	*/
- 	public function getProvider() {
-		return $this->context->getProvider();
-	}
+ 	public function getUserIdFromToken() {
+ 		return $this->context->getUserId();
+ 	}
+
  }

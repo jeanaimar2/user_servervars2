@@ -20,50 +20,70 @@
  *
  */
  namespace OCA\User_Servervars2\Service;
- use OCA\User_Servervars2\Service\IContext;
+ use OCA\User_Servervars2\Service\Context;
+ use OCA\User_Servervars2\Backend\MetadataProvider;
+
 
  class UserServiceTest extends \PHPUnit_Framework_TestCase {
  	
  	var $service;
  	var $context;
- 	var $endWithCallBack;
+ 	var $metadataProvider;
+ 	var $scopeValidator;
 
  	/**
  	*
  	*/
  	protected function setUp(){
  		
- 		$this->context = $this->getMock('OCA\User_Servervars2\Service\IContext');
- 		$this->assertTrue($this->context instanceof IContext);
- 		$this->service = new UserService($this->context);
-
- 		// - callback
- 		$this->endWithCallBack = function($uid,$provider) {
- 					if ( empty($provider)  ) return true;
-	 				$provider = '@'.$provider;
-	 				return substr($uid, -strlen($provider)) === $provider;
-	 			};
+ 		$this->context = $this->getMock('OCA\User_Servervars2\Service\Context');
+ 		$this->metadataProvider = $this->getMock('OCA\User_Servervars2\Backend\MetadataProvider');
+ 		$this->scopeValidator = $this->getMock('OCA\User_Servervars2\Backend\scopeValidator');
+	 	$this->service = new UserService($this->context, $this->metadataProvider);
  	}
 
- 	public function testCheckTokens() {
+
+ 	public function testCheckTokensEmpty() {
 	 	//__WHEN__
-	 	$uid = 'jean.gabin@myidp.org'; 
+	 	$uid = ''; 
 	 	$provider = 'myidp.org';
- 		$this->setUpContext($uid, $provider, $this->endWithCallBack);
+ 		$this->setUpContext($uid, null, null);
 
 	 	//__THEN__
-	 	$this->assertTrue( $this->service->checkTokens() );
+	 	$this->assertFalse( $this->service->checkTokens() );
  	}
+
 
  	/**
  	 * If uid doesn't match provider
  	 *
  	 **/
+ 	public function testCheckTokensOk() {
+ 		//__GIVEN__
+ 		$this->scopeValidator->expects($this->any())
+	 			->method('valid')
+	 			->willReturn( true );
+	 	//__WHEN__
+	 	$uid = 'jean.gabin@myidp.org'; 
+	 	$provider = 'myidp.org';
+ 		$this->setUpContext($uid, $provider, $this->scopeValidator);
+
+	 	//__THEN__
+	 	$this->assertTrue( $this->service->checkTokens() );
+ 	}
+ 	/**
+ 	 * If uid doesn't match provider
+ 	 *
+ 	 **/
  	public function testCheckTokensError() {
+ 		//__GIVEN__
+ 		$this->scopeValidator->expects($this->any())
+	 			->method('valid')
+	 			->willReturn( false );
 	 	//__WHEN__
 	 	$uid = 'jean.gabin@foo.myidp.org'; 
 	 	$provider = 'myidp.org';
- 		$this->setUpContext($uid, $provider, $this->endWithCallBack);
+ 		$this->setUpContext($uid, $provider, $this->scopeValidator);
 
 	 	//__THEN__
 	 	$this->assertFalse( $this->service->checkTokens() );
@@ -74,10 +94,10 @@
 	 	//__WHEN__
 	 	$uid = 'jean.gabin@myidp.org'; 
 	 	$provider = '';
- 		$this->setUpContext($uid, $provider, $this->endWithCallBack);
+ 		$this->setUpContext($uid, $provider, $this->scopeValidator);
 
 	 	//__THEN__
-	 	$this->assertTrue( $this->service->checkTokens() );
+	 	$this->assertFalse( $this->service->checkTokens() );
  	}
 
 
@@ -88,26 +108,24 @@
  	 * @return void
  	 * @author 
  	 **/
- 	function setUpContext($uid, $provider, $callback) {
+ 	function setUpContext($uid, $provider, $validator) {
  				// : isUserMatchingProviderCallBack
- 		$this->context->expects($this->any())
-	 			->method('isUserMatchingProviderCallBack')
-	 			->will( $this->returnValue($callback));
+ 		$this->metadataProvider->expects($this->any())
+	 			->method('getScopeValidator')
+	 			->will( $this->returnValue($validator));
+
+ 		$this->metadataProvider->expects($this->any())
+	 			->method('getUserIdAttributeName')
+	 			->will( $this->returnValue('eppn'));	 			
 	 	// 
 	 	$this->context->expects($this->any())
 	 			->method('getUserId')
 	 			->willReturn( $uid );
 
 	 	$this->context->expects($this->any())
-	 			->method('getProvider')
+	 			->method('getProviderId')
 	 			->willReturn( $provider );
 
  	}
 
- 	/**
- 	*
- 	**/
- 	public function testEndWith() {
-	 	$this->assertTrue(call_user_func($this->endWithCallBack, 'jean.gabin@myidp.org', 'myidp.org'));
- 	}
  }

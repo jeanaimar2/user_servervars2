@@ -49,10 +49,27 @@ class ConfigApp extends App {
 			return  new UserShibbHooks();
 		});
 
-		// Hooks
-		$container->registerService('Backend', function ($c) {
-			return  new UserBackend();
+		// Backend
+		$container->registerService('UserBackend', function ($c) {
+			return  new UserBackend(		
+				$c->query('UserService'),
+				$c->query('MetadataProvider')
+			);
+		});
+
+		// MetadataProvider
+				// Backend
+		$container->registerService('MetadataProvider', function ($c) {
+			return new MetadataProvider(
+				$c->query('MetadataMapper')
+			);
+		});	
+
+		// Mappers
+		$container->registerService('MetadataMapper', function ($c) {
+			return  new MetadataMapper();
 		});		
+
 	}
 
 	public function getUserSession() {

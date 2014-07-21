@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - usershibbbackend.php
+ * ownCloud - 
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -21,39 +21,26 @@
  */
  namespace OCA\User_Servervars2\Backend;
 
- use OCA\User_Servervars2\Service\Context;
+ interface MetadataProvider {
 
-class UserBackend extends \OC_User_Backend {
+ 	/**
+ 	 * Returns for ScopeValidator asociated to the provider
+ 	 * @param String $providerId The provider id
+ 	 * @param String $attributeName
+ 	 * @return ScopeValidator instance if any
+ 	 **/
+ 	public function getScopeValidator($providerId, $attributeName);
 
+ 	/**
+ 	 * @param String $providerId The provider id
+ 	 * @return String organization name
+ 	 */
+ 	public function getOrganization($providerId);
 
-	var $userService;
-
-
-	public function __construct($userService) {
-		$this->userService = $userService;
-	}
-	/**
-	* @see \OC\User\manager::checkPassword 
-	*/
-	public function implementsActions($actions) {
-		return (bool)(
-			(
-			  OC_USER_BACKEND_CHECK_PASSWORD
-			| OC_USER_BACKEND_GET_DISPLAYNAME
-			)
-			& $actions);
-	}
-
-	public function checkPassword($uid, $password) {
-		$token = $this->userService->getUserIdFromToken(); 
-		$same =  ( $token === $uid);
-		if ( $same && $this->userService->checkTokens() ){
-			return $uid;
-		}
-		return false;
-	}
-
-	public function getDisplayName($uid) {
-
-	}
-}
+ 	/**
+ 	 * @param String $providerId The provider id
+ 	 * @return String attribute name used for userId
+ 	 */
+ 	public function getUserIdAttributeName($providerId);
+ 
+ }

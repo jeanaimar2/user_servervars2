@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - IContext
+ * ownCloud - 
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -19,27 +19,36 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
+ namespace OCA\User_Servervars2\Backend\impl;
+ use OCA\User_Servervars2\Backend\ScopeValidator;
+/**
+ * Suffix validator 
+ * validated values are "$prefix@$scope"
+ *
+ * @package default
+ * @author 
+ **/
+ class SuffixScopeValidator extends ScopeValidator {
 
- interface IContext {
+ 	var $scope;
 
- 	/**
- 	 * Return the identity provider ( as 'https://idp.example.org/idp/shibboleth')
- 	 * @return provider name or false if none
- 	 */
- 	public function getProvider();
+ 	function __construct($scope) {
+ 		$this->scope = $scope;
+ 	}
 
- 	/**
- 	 * undocumented function
- 	 *
- 	 * @return user id or false is none
- 	 * @author 
- 	 **/
- 	public function getUserId();
 
- 	/**
- 	 * @return the matching callBack to check if user identifier is allowed from provider or false if none
- 	 */
-	public function isUserMatchingProviderCallBack();
+ 	public function valid($attributeValues ) {
+ 		foreach ($attributeValues as  $value) {
+ 			if ( ! endsWith($value) ) {
+ 				return false;
+ 			}
+ 		}
+ 		return true;
+ 	}
 
+
+ 	function endsWith($uid) {
+ 		$suffix = '@'.$this->scope;
+ 		return substr($uid, -strlen($suffix)) === $suffix;
+ 	};
  }
