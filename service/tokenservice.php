@@ -24,7 +24,7 @@
  use OCA\User_Servervars2\Backend\MetadataProvider;
  use OCA\User_Servervars2\Service\Context;
 
- class UserService {
+ class TokenService {
 
  	var $context;
  	var $metadataProvider;

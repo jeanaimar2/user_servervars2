@@ -19,41 +19,50 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Backend;
+namespace OCA\User_Servervars2\Backend;
 
- use OCA\User_Servervars2\Service\Context;
-
+use OCA\User_Servervars2\Service\TokenService;
+/**
+ * UserBackend 
+ *
+ */
 class UserBackend extends \OC_User_Backend {
 
 
-	var $userService;
+	var $tokenService;
+	var $proxiedBackend;
 
 
-	public function __construct($userService) {
-		$this->userService = $userService;
+	public function __construct(TokenService $tokenService, \OC_User_Interface $proxiedBackend = null) {
+		$this->tokenService = $tokenService;
+		$this->proxiedBackend;
+		if ( is_null($this->proxiedBackend) ) {
+			$this->proxiedBackend = new \OC_User_Database();
+		}
 	}
 	/**
 	* @see \OC\User\manager::checkPassword 
 	*/
-	public function implementsActions($actions) {
-		return (bool)(
-			(
-			  OC_USER_BACKEND_CHECK_PASSWORD
-			| OC_USER_BACKEND_GET_DISPLAYNAME
-			)
-			& $actions);
-	}
 
 	public function checkPassword($uid, $password) {
-		$token = $this->userService->getUserIdFromToken(); 
+		$token = $this->tokenService->getUserIdFromToken(); 
 		$same =  ( $token === $uid);
-		if ( $same && $this->userService->checkTokens() ){
+		if ( $same && $this->tokenService->checkTokens() ){
 			return $uid;
 		}
 		return false;
 	}
 
-	public function getDisplayName($uid) {
 
+	//--------------------------------------------------------------------------
+	// PROXYING
+	//--------------------------------------------------------------------------
+	public function implementsActions($actions) {
+		if ( \OC_USER_BACKEND_CHECK_PASSWORD & $actions )  return true;
+		return $this->proxiedBackend->implementsActions($actions);
+	}
+
+	public function __call($name, $arguments) {
+		call_user_func_array(array($this->proxiedBackend, $name), $arguments);
 	}
 }

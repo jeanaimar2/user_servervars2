@@ -24,7 +24,7 @@
  use OCA\User_Servervars2\Backend\MetadataProvider;
 
 
- class UserServiceTest extends \PHPUnit_Framework_TestCase {
+ class TokenServiceTest extends \PHPUnit_Framework_TestCase {
  	
  	var $service;
  	var $context;
@@ -39,7 +39,7 @@
  		$this->context = $this->getMock('OCA\User_Servervars2\Service\Context');
  		$this->metadataProvider = $this->getMock('OCA\User_Servervars2\Backend\MetadataProvider');
  		$this->scopeValidator = $this->getMock('OCA\User_Servervars2\Backend\scopeValidator');
-	 	$this->service = new UserService($this->context, $this->metadataProvider);
+	 	$this->service = new TokenService($this->context, $this->metadataProvider);
  	}
 
 

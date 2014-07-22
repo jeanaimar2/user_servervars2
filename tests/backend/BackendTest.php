@@ -27,22 +27,30 @@ use OCA\User_Servervars2\Backend\UserBackend;
 class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	var $backend;
-	var $userService;
+	var $tokenService;
 
 	public function setUp() {
 		
-		$this->userService = $this->getMockBuilder('OCA\User_Servervars2\Service\UserService')
+		$this->tokenService = $this->getMockBuilder('OCA\User_Servervars2\Service\TokenService')
 								->disableOriginalConstructor()
 								->getMock();
 
-		$this->backend = new UserBackend( $this->userService );
+		$this->proxiedBackend = $this->getMockBuilder('\OC_User_Interface')
+								->disableOriginalConstructor()
+								->getMock();
+
+		$this->backend = new UserBackend( $this->tokenService, $this->proxiedBackend );
 
 	}
 
-
+	//=========================================================================
+	//
+	//   -- CheckPassword tests
+	//
+	//=========================================================================
 	public function testCheckPassword() {
 		//__GIVEN__
-		$this->configUserService( array('checkTokens' => true, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
+		$this->configTokenService( array('checkTokens' => true, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
@@ -53,7 +61,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCheckPasswordNoUid() {
 		//__GIVEN__
-		$this->configUserService( array('checkTokens' => true, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
+		$this->configTokenService( array('checkTokens' => true, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('','mlkdfmuxm');
@@ -64,7 +72,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCheckPasswordNotSameUid() {
 		//__GIVEN__
-		$this->configUserService( array('checkTokens' => true, 'getUserIdFromToken' => 'another@myidp.org'));
+		$this->configTokenService( array('checkTokens' => true, 'getUserIdFromToken' => 'another@myidp.org'));
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
@@ -76,7 +84,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCheckPasswordCheckFailed() {
 		//__GIVEN__
-		$this->configUserService( array('checkTokens' => false, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
+		$this->configTokenService( array('checkTokens' => false, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
@@ -86,8 +94,8 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 	}	
 
 
-	function configUserService($__) {
-		$this->userService->expects($this->any())->method('checkTokens')->willReturn( $__['checkTokens']);
-		$this->userService->expects($this->any())->method('getUserIdFromToken')->willReturn($__['getUserIdFromToken']);
+	function configTokenService($__) {
+		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn( $__['checkTokens']);
+		$this->tokenService->expects($this->any())->method('getUserIdFromToken')->willReturn($__['getUserIdFromToken']);
 	}
 }

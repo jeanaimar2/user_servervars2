@@ -22,7 +22,8 @@
 namespace OCA\User_Servervars2\AppInfo;
  
 use \OCP\AppFramework\App;
-use \OCA\User_Servervars2\Service\UserService;
+use \OCA\User_Servervars2\Service\TokenService;
+use \OCA\User_Servervars2\Hook\ServerVarsHooks;
 
 
 
@@ -38,22 +39,29 @@ class ConfigApp extends App {
 		$container->registerService('PageController', function ($c) {
 			return  new PageController();
 		});		
+
+
+		$container->registerService('Context', function ($c) {
+			return new RemoteContext();
+		});	
 		
 		// Service
-		$container->registerService('UserService', function ($c) {
-			return  new UserService();
+		$container->registerService('TokenService', function ($c) {
+			return  new TokenService(
+				$c->query('Context'),  
+				$c->query('MetadataProvider')
+			);
 		});
 
 		// Hooks
-		$container->registerService('UserShibbHooks', function ($c) {
-			return  new UserShibbHooks();
+		$container->registerService('ServerVarsHooks', function ($c) {
+			return  new ServerVarsHooks();
 		});
 
 		// Backend
 		$container->registerService('UserBackend', function ($c) {
 			return  new UserBackend(		
-				$c->query('UserService'),
-				$c->query('MetadataProvider')
+				$c->query('TokenService')
 			);
 		});
 
