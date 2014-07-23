@@ -31,6 +31,10 @@ class UserBackend extends \OC_User_Backend {
 
 	var $tokenService;
 	var $proxiedBackend;
+	var $autoCreateUser;
+	var $updateUserData;
+	var $defaultGroups;
+	var $protectedGroups;
 
 
 	public function __construct(TokenService $tokenService, \OC_User_Interface $proxiedBackend = null) {
@@ -52,6 +56,23 @@ class UserBackend extends \OC_User_Backend {
 		}
 		return false;
 	}
+
+	function isAutoCreateUser() {
+		return $this->autoCreateUser;
+	}
+
+	function isUpdateUserData() {
+		return $this->updateUserData;
+	}
+
+	function getDefaultGroups() {
+		return $this->defaultGroups;
+	}
+
+	function getProtectedGroups() {
+		return $this->protectedGroups;
+	}
+
 
 
 	//--------------------------------------------------------------------------

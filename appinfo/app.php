@@ -22,12 +22,13 @@
  namespace OCA\User_Servervars2\AppInfo;
  
  // - invocation du container
-$app = new UserShibbApp();
+$app = new ConfigApp();
 $c = $app->getContainer();
 
 //To put a template into admin menu
 //$c->registerAdmin('user_shibb', 'settings');
 $app->getUserManager()->registerBackend( $c->query('Backend'));
+$c->query('SessionHooks')->register();
 
 
 

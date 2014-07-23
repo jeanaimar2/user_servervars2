@@ -58,4 +58,21 @@
  		return $this->context->getUserId();
  	}
 
+ 	/**
+ 	 *
+ 	 * @return Groups array
+ 	 */
+ 	public function getGroupsFromToken() {
+ 		return $this->context->getGroups();
+ 	} 	
+
+
+ 	public function getDisplayName() {
+ 		return $this->context->getDisplayName();
+ 	}
+
+ 	public function getEmail()  {
+ 		return $this->context->getEmail();
+ 	}
+
  }

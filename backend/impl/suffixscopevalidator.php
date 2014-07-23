@@ -28,7 +28,7 @@
  * @package default
  * @author 
  **/
- class SuffixScopeValidator extends ScopeValidator {
+ class SuffixScopeValidator implements ScopeValidator {
 
  	var $scope;
 

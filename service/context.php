@@ -37,4 +37,8 @@ interface Context {
  	 **/
  	public function getUserId();
 
+ 	public function getDispalyName();
+
+ 	public function getEmail();
+
  }

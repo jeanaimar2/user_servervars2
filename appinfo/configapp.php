@@ -95,4 +95,11 @@ class ConfigApp extends App {
 	public function getUrlGenerator() {
 		return $this->getContainer()->getServer()->getUrlGenerator();
 	}
+
+	/**
+	 * @return /OCP/IConfig
+	 */
+	public function getConfig() {
+		return $this->getServer()->getConfig();
+	}
 }

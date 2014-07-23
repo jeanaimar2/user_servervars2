@@ -13,3 +13,15 @@ set PHPUNIT=c:\servers\xampp\php\phpunit
 %PHPUNIT% --bootstrap tests\bootstrap.php apps\user_servervars2\tests
 ```
 
+```
+set XDEBUG_CONFIG=sublime.xdebug
+```
+
+
+Principes de développement:
+- N'utiliser que les interface PUBLIQUES de owncore 7
+
+server -> \OCP\IServerContainer
+
+
+
