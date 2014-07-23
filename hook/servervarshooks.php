@@ -28,10 +28,11 @@ use \OCP\User;
 class ServerVarsHooks {
 
 	var $tokenService;
-	var $userManager;
+	var $userAndGroupService;
+/*	var $userManager;
 	var $groupManager;
 	var $config;
-	var $backend;
+	var $backend;*/
 
 	function __construct($tokenService, $userManager, $backend, $config) {
 		$this->tokenService = $tokenService;
@@ -43,41 +44,20 @@ class ServerVarsHooks {
 	function onPostLogin($uid, $password) {
 
 		$justCreatedUser = null;
+		$uag = $this->userAndGroupService;
+
 		if ( $uid === $this->tokenService->checkTokens() ) {
-			if (  $this->backend->isAutoCreateUser() && 
-				! $this->userManager->userExists($uid)) {
+			if ( $uag->isAutoCreateUser() &&   
+				! $uag->userExists($uid)) {
 				$justCreatedUser = $this->createUser($uid);
 			}
+//			if ( $justCreatedUser || $this->backend->isUpdateUserData() ) {
 
-			if ( $justCreatedUser || $this->backend->isUpdateUserData() ) {
-				$this->udpateDisplayName( $uid );
-				$this->updateMail( $uid );
-				$this->updateGroup( $uid );
+			if ( $justCreatedUser || $uag->isUpdateUserData() ) {
+				$uag->udpateDisplayName( $uid, $this->tokenService->getDisplayName() );
+				$uag->updateMail( $uid ,  $this->tokenService->getEmail());
+				$uag->updateGroup( $uid, $this->tokenService->getGroupsFromToken() );
 			}
-		}
-
-	}
-
-	/**
-	 * Cf. 	OC_User_Backend::OC_USER_BACKEND_GET_DISPLAYNAME => 'getDisplayName',
-	 *	    OC_User_Backend::OC_USER_BACKEND_SET_DISPLAYNAME => 'setDisplayName',
-	 */
-	protected function udpateDisplayName($uid) {
-		$displayName = $this->tokenService->getDisplayName();
-				// Update if not the same
-		if ( $displayName !== $this->backend->getDisplayName($uid) )  {
-			$this->backend->setDisplayName( $displayName );
-		}
-	}
-
-	/**
-	 * Email is set in preferences (WTF ?)
-	 */
-	protected function updateMail($uid) {
-		$email = $this->tokenService->getEmail();
-		$existingEmail = $this->config->getUserValue($uid, 'settings', 'email');
-		if ( $email !== $existingEmail ) {
-			$this->config->setUserValue($uid, 'settings', 'email', $email);
 		}
 	}
 
