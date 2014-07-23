@@ -23,6 +23,7 @@ namespace OCA\User_Servervars2\AppInfo;
  
 use \OCP\AppFramework\App;
 use \OCA\User_Servervars2\Service\TokenService;
+use \OCA\User_Servervars2\Service\Impl\RemoteTokens;
 use \OCA\User_Servervars2\Hook\ServerVarsHooks;
 
 
@@ -31,27 +32,43 @@ use \OCA\User_Servervars2\Hook\ServerVarsHooks;
 class ConfigApp extends App {
 
 	public function __construct(array $urlParams=array()){
-		parent::__construct('gtu', $urlParams);
+		parent::__construct('User_Servervars2', $urlParams);
 
 		$container = $this->getContainer();
 
 		// Controller
-		$container->registerService('PageController', function ($c) {
+/*		$container->registerService('PageController', function ($c) {
 			return  new PageController();
-		});		
+		});	*/	
 
 
-		$container->registerService('Context', function ($c) {
-			return new RemoteContext();
+		$container->registerService('Tokens', function ($c) {
+			return new RemoteTokens();
 		});	
 		
 		// Service
 		$container->registerService('TokenService', function ($c) {
 			return  new TokenService(
-				$c->query('Context'),  
-				$c->query('MetadataProvider')
+				$c->query('Tokens')
 			);
 		});
+
+
+/*		$container->registerService('GroupManager', function($c) {
+			return new SimpleGroupManager();
+		});*/
+
+		// Service
+		$container->registerService('UserAndGroupService', function ($c) {
+			return  new ProxyUserAndGroupService(
+				$c->query('TokenService'),  
+				$c->query('ServerContainer')->getUserManager(),
+/*				$c->query('GroupManager'),*/
+				$c->query('UserBackend')
+			);
+		});
+
+
 
 		// Hooks
 		$container->registerService('ServerVarsHooks', function ($c) {

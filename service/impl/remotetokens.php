@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - 
+ * ownCloud - Context
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -19,13 +19,34 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\User_Servervars2\Backend;
+namespace OCA\User_Servervars2\Service;
 
-interface MetadataProvider {
+class RemoteTokens implements Tokens {
 
-	/**
-	 * @return Metadata 
-	 */
- 	function getMetadata($idProvider)
- 
+ 	/**
+ 	 * Return the identity provider ( as 'https://idp.example.org/idp/shibboleth')
+ 	 * @return provider name or false if none
+ 	 */
+ 	public function getProviderId(){
+ 		return $_SERVER['Shib-Identity-Provider'];
+ 	}
+ 	/**
+ 	 * undocumented function
+ 	 *
+ 	 * @return user id or false is none
+ 	 * @author 
+ 	 **/
+ 	public function getUserId() {
+ 		return $_SERVER['eppn'];
+
+ 	public function getDisplayName(){
+ 		return $_SERVER['displayName'];
+
+ 	public function getEmail();
+ 		return $_SERVER['mail'];
+
+ 	public function getGroups() {
+ 		return array( $_SERVER['ou'] );
+ 	}
+
  }

@@ -21,7 +21,7 @@
  */
  namespace OCA\User_Servervars2\Service;
 
- interface UserAndGroupService {
+interface UserAndGroupService {
 
  	public function userExists($uid);
 
@@ -29,12 +29,10 @@
 
  	public function isUpdateUserData();
 
- 	protected function udpateDisplayName($uid);
+ 	public function udpateDisplayName($uid);
 
- 	protected function updateMail($uid);
+ 	public function updateMail($uid);
 
- 	protected function updateGroup();
-
-
+ 	public function updateGroup();
 
  }

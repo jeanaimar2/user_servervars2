@@ -28,6 +28,13 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 	var $config;
 	var $backend;
 
+	function __construct($userManager, $groupManager, $backend, $config) {
+		$this->tokenService = $tokenService;
+		$this->userManager = $userManager;
+		$this->backend = $backend;
+		$this->config = $config;
+	}	
+
 
 
 	public function userExists($uid) {
@@ -42,11 +49,44 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 		$this->backend->isUpdateUserData()
 	}
 
+	/**
+	 * Cf. 	OC_User_Backend::OC_USER_BACKEND_GET_DISPLAYNAME => 'getDisplayName',
+	 *	    OC_User_Backend::OC_USER_BACKEND_SET_DISPLAYNAME => 'setDisplayName',
+	 */
 	protected function udpateDisplayName($uid, displayName) {
 				// Update if not the same
 		if ( $displayName !== $this->backend->getDisplayName($uid) )  {
 			$this->backend->setDisplayName( $displayName );
 		}
 	}
+
+		/**
+	 * Email is set in preferences (WTF ?)
+	 */
+	protected function updateMail($uid, $email) {
+		$existingEmail = $this->config->getUserValue($uid, 'settings', 'email');
+		if ( $email !== $existingEmail ) {
+			$this->config->setUserValue($uid, 'settings', 'email', $email);
+		}
+	}
+
+	protected function updateGroup($uid, $justCreated) {
+		$groups 		= $this->tokenService->getGroupsFromToken();
+		$defaultGroups 	= $this->backend->getDefaultGroups();
+		
+		if (empty($groups) && !empty($defaultGroups)) {
+            $groups = $defaultGroups;
+        }
+
+        if ($groups !== false) {
+
+        	if ( ! $justCreated ) {
+        		$oldGroups = $this->groupManager->getUserGroups( $justCreated );
+        		$this->cleanGroups($groups, $oldGroups);
+        	}
+        	$this->updateGroups();
+        }
+
+	}	
 
 }

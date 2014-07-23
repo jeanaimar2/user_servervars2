@@ -30,20 +30,20 @@ class UserBackend extends \OC_User_Backend {
 
 
 	var $tokenService;
-	var $proxiedBackend;
+//	var $proxiedBackend;
 	var $autoCreateUser;
 	var $updateUserData;
 	var $defaultGroups;
 	var $protectedGroups;
 
 
-	public function __construct(TokenService $tokenService, \OC_User_Interface $proxiedBackend = null) {
+	public function __construct(TokenService $tokenService) { //, \OC_User_Interface $proxiedBackend = null
 		$this->tokenService = $tokenService;
-		$this->proxiedBackend;
+/*		$this->proxiedBackend;
 		if ( is_null($this->proxiedBackend) ) {
 			$this->proxiedBackend = new \OC_User_Database();
 		}
-	}
+*/	}
 	/**
 	* @see \OC\User\manager::checkPassword 
 	*/
@@ -74,7 +74,7 @@ class UserBackend extends \OC_User_Backend {
 	}
 
 
-
+/*
 	//--------------------------------------------------------------------------
 	// PROXYING
 	//--------------------------------------------------------------------------
@@ -85,5 +85,5 @@ class UserBackend extends \OC_User_Backend {
 
 	public function __call($name, $arguments) {
 		call_user_func_array(array($this->proxiedBackend, $name), $arguments);
-	}
+	}*/
 }

@@ -19,60 +19,69 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
+namespace OCA\User_Servervars2\Service;
 
- use OCA\User_Servervars2\Backend\MetadataProvider;
- use OCA\User_Servervars2\Service\Context;
+use OCA\User_Servervars2\Backend\MetadataProvider;
+use OCA\User_Servervars2\Service\Tokens;
 
- class TokenService {
+class TokenService {
 
- 	var $context;
- 	var $metadataProvider;
+	var $tokens;
+	var $metadataProvider;
 
- 	public function __construct(Context $context, MetadataProvider $metadataProvider) {
- 		$this->context = $context;
+	public function __construct(Tokens $tokens, MetadataProvider $metadataProvider = null) {
+		$this->tokens = $tokens;
 		$this->metadataProvider = $metadataProvider;
- 	}
+	}
 
 
- 	public function checkTokens() {
- 		
- 		$uid = $this->context->getUserId();
- 		if ( empty($uid)) {
- 			return false;
- 		}
+	public function checkTokens() {
 
- 		$providerId 	= $this->context->getProviderId();
- 		if ( empty($providerId)) {
- 			return false;
- 		}
- 		$attributeName  = $this->metadataProvider->getUserIdAttributeName($providerId);
- 		$scopeValidator = $this->metadataProvider->getScopeValidator($providerId, $attributeName);
- 		if ( $scopeValidator ) {
- 			return $scopeValidator->valid(array($uid));
- 		}
- 		return true;
- 	}
+		$uid = $this->tokens->getUserId();
+		if ( empty($uid)) {
+			return false;
+		}
 
- 	public function getUserIdFromToken() {
- 		return $this->context->getUserId();
- 	}
+		$providerId 	= $this->tokens->getProviderId();
+		if ( empty($providerId)) {
+			return false;
+		}
+		if ( $this->metadataProvider ) {
+			$metadata = $this->metadataProvider->getMetaData($providerId);
+
+			if ( ! $metadata ) {
+				return false;
+			}
+
+			$attributeName  = $metadata->getUserIdAttributeName($providerId);
+			$scopeValidator = $metadata->getScopeValidator($providerId, $attributeName);
+			if ( $scopeValidator ) {
+				return $scopeValidator->valid(array($uid));
+			}
+		}
+		return true;
+	}
+
+
+	public function getUserIdFromToken() {
+		return $this->tokens->getUserId();
+	}
 
  	/**
  	 *
  	 * @return Groups array
  	 */
  	public function getGroupsFromToken() {
- 		return $this->context->getGroups();
+ 		return $this->tokens->getGroups();
  	} 	
 
 
  	public function getDisplayName() {
- 		return $this->context->getDisplayName();
+ 		return $this->tokens->getDisplayName();
  	}
 
  	public function getEmail()  {
- 		return $this->context->getEmail();
+ 		return $this->tokens->getEmail();
  	}
 
  }
