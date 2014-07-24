@@ -19,7 +19,9 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\User_Servervars2\Service;
+namespace OCA\User_Servervars2\Service\Impl;
+
+use OCA\User_Servervars2\Service\Tokens;
 
 class RemoteTokens implements Tokens {
 
@@ -37,16 +39,28 @@ class RemoteTokens implements Tokens {
  	 * @author 
  	 **/
  	public function getUserId() {
- 		return $_SERVER['eppn'];
+ 		return $this->idx($_SERVER, 'eppn');
+ 	}
 
  	public function getDisplayName(){
  		return $_SERVER['displayName'];
+ 	}
 
- 	public function getEmail();
+ 	public function getEmail() {
  		return $_SERVER['mail'];
+ 	}
 
  	public function getGroups() {
  		return array( $_SERVER['ou'] );
+ 	}
+ 	/**
+ 	* @param array array
+ 	* @param String key
+ 	* @return value or false
+ 	*/
+ 	public function idx(array $array, $key) {
+ 		if ( isset($array[ $key ] ))  return $array[ $key ];
+ 		return false;
  	}
 
  }

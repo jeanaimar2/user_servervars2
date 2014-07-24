@@ -35,9 +35,14 @@ class TokenService {
 	}
 
 
+	/**
+	* 
+	* @return $uid;
+	*/
 	public function checkTokens() {
 
 		$uid = $this->tokens->getUserId();
+
 		if ( empty($uid)) {
 			return false;
 		}
@@ -59,7 +64,7 @@ class TokenService {
 				return $scopeValidator->valid(array($uid));
 			}
 		}
-		return true;
+		return $uid;
 	}
 
 

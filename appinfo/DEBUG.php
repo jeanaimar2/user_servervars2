@@ -19,26 +19,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
-
-interface UserAndGroupService {
-
-	/**
-	* Quiet user provisionning.
-	* 
-	*/
-	public function provisionUser($uid);
-
- 	public function isAutoCreateUser();
-
- 	public function isUpdateUserData();
-
- 	public function updateDisplayName($uid,  $displayName);
-
- 	public function updateMail($uid, $mail);
-
- 	public function updateGroup($uid, $justCreated);
-
- 	public function login($uid);
-
- }
+$_SERVER['Shib-Identity-Provider']='urm:blabla';
+$_SERVER['eppn'] = 'user5';
+$_SERVER['displayName']='Jean GABIN 3';
+$_SERVER['mail'] = 'jean.gabin@bar.org';
+$_SERVER['ou'] = 'MOY1678';

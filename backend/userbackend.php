@@ -26,32 +26,35 @@ use OCA\User_Servervars2\Service\TokenService;
  * UserBackend 
  *
  */
-class UserBackend extends \OC_User_Backend {
+class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 
 
 	var $tokenService;
-//	var $proxiedBackend;
+	var $proxiedBackend;
 	var $autoCreateUser;
 	var $updateUserData;
 	var $defaultGroups;
 	var $protectedGroups;
+	var $config;
 
 
-	public function __construct(TokenService $tokenService) { //, \OC_User_Interface $proxiedBackend = null
+	public function __construct(TokenService $tokenService, AppConfig $config) { //, \OC_User_Interface $proxiedBackend = null
 		$this->tokenService = $tokenService;
-/*		$this->proxiedBackend;
+		$this->config = $config;
+		$this->autoCreateUser = true; //$config->getValue('user_servervars2', 'auto_create_user');
+		$this->updateUserData = true; //$config->getValue('user_servervars2', 'update_user');
+		$this->defaultGroups = false; //$config->getValue('user_servervars2', 'auto_create_user');
+		$this->protectedGroups = false;
 		if ( is_null($this->proxiedBackend) ) {
 			$this->proxiedBackend = new \OC_User_Database();
 		}
-*/	}
+	}
 	/**
 	* @see \OC\User\manager::checkPassword 
 	*/
 
 	public function checkPassword($uid, $password) {
-		$token = $this->tokenService->getUserIdFromToken(); 
-		$same =  ( $token === $uid);
-		if ( $same && $this->tokenService->checkTokens() ){
+		if ( $uid === $this->tokenService->checkTokens() ){
 			return $uid;
 		}
 		return false;
@@ -74,11 +77,11 @@ class UserBackend extends \OC_User_Backend {
 	}
 
 
-/*
+
 	//--------------------------------------------------------------------------
 	// PROXYING
 	//--------------------------------------------------------------------------
-	public function implementsActions($actions) {
+/*	public function implementsActions($actions) {
 		if ( \OC_USER_BACKEND_CHECK_PASSWORD & $actions )  return true;
 		return $this->proxiedBackend->implementsActions($actions);
 	}
@@ -86,4 +89,6 @@ class UserBackend extends \OC_User_Backend {
 	public function __call($name, $arguments) {
 		call_user_func_array(array($this->proxiedBackend, $name), $arguments);
 	}*/
+
+
 }

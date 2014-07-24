@@ -23,12 +23,16 @@ namespace OCA\User_Servervars2\AppInfo;
  
 use \OCP\AppFramework\App;
 use \OCA\User_Servervars2\Service\TokenService;
+use \OCA\User_Servervars2\Backend\UserBackend;
 use \OCA\User_Servervars2\Service\Impl\RemoteTokens;
+use \OCA\User_Servervars2\Service\ProxyUserAndGroupService;
 use \OCA\User_Servervars2\Hook\ServerVarsHooks;
 
 
 
-
+/**
+ *
+ */
 class ConfigApp extends App {
 
 	public function __construct(array $urlParams=array()){
@@ -40,7 +44,6 @@ class ConfigApp extends App {
 /*		$container->registerService('PageController', function ($c) {
 			return  new PageController();
 		});	*/	
-
 
 		$container->registerService('Tokens', function ($c) {
 			return new RemoteTokens();
@@ -63,8 +66,9 @@ class ConfigApp extends App {
 			return  new ProxyUserAndGroupService(
 				$c->query('TokenService'),  
 				$c->query('ServerContainer')->getUserManager(),
-/*				$c->query('GroupManager'),*/
-				$c->query('UserBackend')
+				null,
+				$c->query('UserBackend'),
+				$c->query('ServerContainer')->getConfig()
 			);
 		});
 
@@ -72,13 +76,17 @@ class ConfigApp extends App {
 
 		// Hooks
 		$container->registerService('ServerVarsHooks', function ($c) {
-			return  new ServerVarsHooks();
+			return  new ServerVarsHooks(
+				$c->query('TokenService'),
+				$c->query('UserAndGroupService')
+			);
 		});
 
 		// Backend
 		$container->registerService('UserBackend', function ($c) {
 			return  new UserBackend(		
-				$c->query('TokenService')
+				$c->query('TokenService'),
+				$c->query('ServerContainer')->getAppConfig()
 			);
 		});
 
@@ -95,6 +103,11 @@ class ConfigApp extends App {
 			return  new MetadataMapper();
 		});		
 
+	}
+
+
+	public function getTokens() {
+		return $this->getContainer()->query('Tokens');
 	}
 
 	public function getUserSession() {
@@ -117,6 +130,10 @@ class ConfigApp extends App {
 	 * @return /OCP/IConfig
 	 */
 	public function getConfig() {
-		return $this->getServer()->getConfig();
+		return $this->getContainer()->getServer()->getConfig();
+	}
+
+	public function getAppConfig() {
+		return $this->getContainer()->getServer()->getAppConfig();
 	}
 }
