@@ -24,7 +24,7 @@ namespace OCA\User_Servervars2\AppInfo;
 use \OCP\AppFramework\App;
 use \OCA\User_Servervars2\Service\TokenService;
 use \OCA\User_Servervars2\Backend\UserBackend;
-use \OCA\User_Servervars2\Service\Impl\RemoteTokens;
+use \OCA\User_Servervars2\Service\TokensFactory;
 use \OCA\User_Servervars2\Service\ProxyUserAndGroupService;
 use \OCA\User_Servervars2\Hook\ServerVarsHooks;
 
@@ -45,8 +45,14 @@ class ConfigApp extends App {
 			return  new PageController();
 		});	*/	
 
+		$container->registerService('TokensFactory', function($c) {
+			return new TokensFactory( 
+				$c->query('ServerContainer')->getAppConfig()
+				);
+		});
+
 		$container->registerService('Tokens', function ($c) {
-			return new RemoteTokens();
+			return $c->query('TokensFactory')->getTokens();
 		});	
 		
 		// Service

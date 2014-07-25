@@ -19,30 +19,31 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\AppInfo;
+namespace OCA\User_Servervars2\AppInfo;
 
+// $loadDebug=false;
+// if ( $_GET['debug'] === '1' ) {
+// 	$loadDebug = true;
+// 	setcookie('usv2', true);
+// } 
 
-$loadDebug=false;
-if ( $_GET['debug'] === '1' ) {
-	$loadDebug = true;
-	setcookie('usv2', true);
-} 
+// if ( $_GET['debug'] === '0' ) {
+// 	$loadDebug = false;
+// 	setcookie('usv2', "", time() -3600);
+// } 
 
-if ( $_GET['debug'] === '0' ) {
-	$loadDebug = false;
-	setcookie('usv2', "", time() -3600);
-} 
+// if ( $_COOKIE['usv2'] ) {
+// 	$loadDebug=true;
+// }
 
-if ( $_COOKIE['usv2'] ) {
-	$loadDebug=true;
-}
-
-if ( loadDebug) {
-	require_once __DIR__.'./DEBUG.php';
-}
- //require_once __DIR__.'/DEBUG.php';
+// if ( loadDebug) {
+// 	$dir = __DIR__;
+// 	require_once __DIR__.'./DEBUG.php';
+// }
+//  //require_once __DIR__.'/DEBUG.php';
  
  // - invocation du container
+
 $app = new ConfigApp();
 $c = $app->getContainer();
 
@@ -50,10 +51,10 @@ $c = $app->getContainer();
 //$c->registerAdmin('user_shibb', 'settings');
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
 $c->query('ServerVarsHooks')->register( $app->getUserSession());
-
+$authStatus = $c->isLoggedIn();
 
 // - trigger authentication - 
-
+// http://localhost/core/index.php?XDEBUG_SESSION_START=sublime.xdebug&app=usv2&debug=1
 if(isset($_GET['app']) && $_GET['app'] == 'usv2') {
 
 	$tokens = $app->getTokens();
@@ -71,7 +72,7 @@ if(isset($_GET['app']) && $_GET['app'] == 'usv2') {
 	if ( ! $isLoggedIn ) {
 		$isLoggedIn = $uag->login($uid); 
 	}
-	if ( !$isLoggedIn )  {
+	if ( !$isLoggedIn || !$c->isLoggedIn())  {
 		            \OC_Log::write('servervars',
                             'Error trying to log-in the user' . $uid,
                             \OC_Log::DEBUG);

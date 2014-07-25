@@ -19,8 +19,27 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-$_SERVER['Shib-Identity-Provider']='urm:blabla';
-$_SERVER['eppn'] = 'user10';
-$_SERVER['displayName']='Foo BAR';
-$_SERVER['mail'] = 'foo@bar.org';
-$_SERVER['ou'] = 'MOY1678';
+
+namespace OCA\User_Servervars2\Service;
+
+class TokensFactory {
+
+ 	/**
+ 	 * App config
+ 	 *
+ 	 * @var AppConfig
+ 	 **/
+ 	var $appConfig;
+
+
+ 	function __construct($appConfig) {
+ 		$this->appConfig = $appConfig;
+ 	}
+
+ 	public function getTokens() {
+ 		$className = $this->appConfig->getValue('user_servervars2', 'tokens_class', '\OCA\User_Servervars2\Service\Impl\RemoteTokens');
+ 		$r = new \ReflectionClass($className);
+ 		$object = $r->newInstance( $this->appConfig );
+ 		return $object;
+ 	}
+ }

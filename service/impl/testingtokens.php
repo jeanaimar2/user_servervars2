@@ -23,10 +23,21 @@ namespace OCA\User_Servervars2\Service\Impl;
 
 use OCA\User_Servervars2\Service\Tokens;
 
-class RemoteTokens implements Tokens {
+class TestingTokens implements Tokens {
+
+	/**
+	 * undocumented class variable
+	 *
+	 * @var appConfig
+	 **/
+	var $appConfig;
 
 	function __construct($appConfig) {
-		// no use of AppConfig yet
+		$this->appConfig = $appConfig;
+	}
+
+	private function getParam($key, $default) {
+		return $this->appConfig->getValue('user_servervars2', $key, $default);
 	}
 
  	/**
@@ -34,7 +45,7 @@ class RemoteTokens implements Tokens {
  	 * @return provider name or false if none
  	 */
  	public function getProviderId(){
- 		return $_SERVER['Shib-Identity-Provider'];
+ 		return $this->getParam('ttokens_provider_id', 'http://myidp.foo');
  	}
  	/**
  	 * undocumented function
@@ -43,28 +54,19 @@ class RemoteTokens implements Tokens {
  	 * @author 
  	 **/
  	public function getUserId() {
- 		return $this->idx($_SERVER, 'eppn');
+ 		return $this->getParam('ttokens_user_id', 'foo');
  	}
 
  	public function getDisplayName(){
- 		return $_SERVER['displayName'];
+ 		return $this->getParam('ttokens_display_name', 'bar');
  	}
 
  	public function getEmail() {
- 		return $_SERVER['mail'];
+ 		return $this->getParam('ttokens_email', 'bar@foo.org');
  	}
 
  	public function getGroups() {
- 		return array( $_SERVER['ou'] );
- 	}
- 	/**
- 	* @param array array
- 	* @param String key
- 	* @return value or false
- 	*/
- 	public function idx(array $array, $key) {
- 		if ( isset($array[ $key ] ))  return $array[ $key ];
- 		return false;
+ 		return explode( '|', $this->getParam('ttokens_groups', 'foogrp|bargrp') );
  	}
 
  }
