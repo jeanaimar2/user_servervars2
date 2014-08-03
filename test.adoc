@@ -1,1 +1,10 @@
-= test
+= Documentation (française)
+V 0.1 Marc DEXET (marc.dexet@dsi.cnrs.fr)
+Ceci est la documentation _en français_ en asciidoc du projet
+:toc:
+
+= Objet du document
+= Présentation
+= Règles de gestion
+= Architecture
+= Autres
