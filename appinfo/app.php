@@ -21,34 +21,17 @@
  */
 namespace OCA\User_Servervars2\AppInfo;
 
-// $loadDebug=false;
-// if ( $_GET['debug'] === '1' ) {
-// 	$loadDebug = true;
-// 	setcookie('usv2', true);
-// } 
-
-// if ( $_GET['debug'] === '0' ) {
-// 	$loadDebug = false;
-// 	setcookie('usv2', "", time() -3600);
-// } 
-
-// if ( $_COOKIE['usv2'] ) {
-// 	$loadDebug=true;
-// }
-
-// if ( loadDebug) {
-// 	$dir = __DIR__;
-// 	require_once __DIR__.'./DEBUG.php';
-// }
-//  //require_once __DIR__.'/DEBUG.php';
- 
- // - invocation du container
-
 $app = new ConfigApp();
 $c = $app->getContainer();
+if ( ! \OCP\App::isEnabled($c->query('AppName')) ) {
+	return;
+}
+
+
 
 //To put a template into admin menu
 //$c->registerAdmin('user_shibb', 'settings');
+
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
 $c->query('ServerVarsHooks')->register( $app->getUserSession());
 $authStatus = $c->isLoggedIn();
@@ -80,8 +63,6 @@ if(isset($_GET['app']) && $_GET['app'] == 'usv2') {
 
  	\OC::$REQUESTEDAPP = '';
 	\OC_Util::redirectToDefaultPage();
-
-
 }
 
 

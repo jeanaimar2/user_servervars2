@@ -21,6 +21,10 @@
 */
 namespace OCA\User_Servervars2\Backend;
 
+/**
+*
+*
+*/
 interface Metadata {
 
 	/**

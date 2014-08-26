@@ -1,0 +1,12 @@
+= User ServerVars II
+V 0.1 Marc DEXET (marc.dexet@dsi.cnrs.fr)
+Documentation en français
+:toc:
+
+= Objet du document
+= Présentation
+= Règles de gestion
+= Architecture
+L'architecture de cette application repose sur les éléments suivants
+
+= Autres
