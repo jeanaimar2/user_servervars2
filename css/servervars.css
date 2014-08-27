@@ -1,0 +1,23 @@
+#usv2settings fieldset{
+    border-bottom: 1px solid #DDD;
+    border-left: 1px solid #DDD;
+    border-right: 1px solid #DDD;
+    margin-bottom: 10px;
+}
+
+.block input[type=text] {
+    width: 500px;
+}
+.block label { 
+  display: inline-block; 
+  width: 250px; 
+  text-align: right; 
+  margin-right: 15px;
+}
+
+input.usv2changed {
+  background: lightYellow; 
+}
+input.usv2saved {
+  background: lightGreen; 
+}

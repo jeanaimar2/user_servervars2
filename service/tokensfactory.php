@@ -38,8 +38,16 @@ class TokensFactory {
 
  	public function getTokens() {
  		$className = $this->appConfig->getValue('user_servervars2', 'tokens_class', '\OCA\User_Servervars2\Service\Impl\RemoteTokens');
- 		$r = new \ReflectionClass($className);
- 		$object = $r->newInstance( $this->appConfig );
- 		return $object;
+ 		try { 
+ 			$r = new \ReflectionClass($className.'+');
+ 			$object = $r->newInstance( $this->appConfig );
+ 			return $object;
+ 		} catch(\ReflectionException $e) {
+ 			\OCP\Util::writeLog('User_Servervars2',"Class not found exception $className, use \OCA\User_Servervars2\Service\Impl\MuteTokens instead", \OCP\Util::ERROR);
+ 			$r = new \ReflectionClass('\OCA\User_Servervars2\Service\Impl\MuteTokens');
+ 			$object = $r->newInstance( $this->appConfig );
+ 			return $object;
+ 		}
+ 		
  	}
  }

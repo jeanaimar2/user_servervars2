@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - Context
+ * ownCloud - 
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -23,21 +23,10 @@ namespace OCA\User_Servervars2\Service\Impl;
 
 use OCA\User_Servervars2\Service\Tokens;
 
-class TestingTokens implements Tokens {
-
-	/**
-	 * undocumented class variable
-	 *
-	 * @var appConfig
-	 **/
-	var $appConfig;
+class MuteTokens implements Tokens {
 
 	function __construct($appConfig) {
-		$this->appConfig = $appConfig;
-	}
-
-	private function getParam($key, $default) {
-		return $this->appConfig->getValue('user_servervars2', $key, $default);
+		// no use of AppConfig yet
 	}
 
  	/**
@@ -45,7 +34,7 @@ class TestingTokens implements Tokens {
  	 * @return provider name or false if none
  	 */
  	public function getProviderId(){
- 		return $this->getParam('ttokens_provider_id', 'http://myidp.foo');
+ 		return "muteTokens: change settings";
  	}
  	/**
  	 * undocumented function
@@ -54,19 +43,19 @@ class TestingTokens implements Tokens {
  	 * @author 
  	 **/
  	public function getUserId() {
- 		return $this->getParam('ttokens_user_id', 'foo');
+ 		return "muteTokens: change settings";
  	}
 
  	public function getDisplayName(){
- 		return $this->getParam('ttokens_display_name', 'bar');
+ 		return "muteTokens: change settings";
  	}
 
  	public function getEmail() {
- 		return $this->getParam('ttokens_email', 'bar@foo.org');
+ 		return "muteTokens: change settings";
  	}
 
  	public function getGroups() {
- 		return explode( '|', $this->getParam('ttokens_groups', 'foogrp|bargrp') );
+ 		return "muteTokens: change settings";
  	}
 
  }

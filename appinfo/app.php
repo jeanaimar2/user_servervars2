@@ -23,14 +23,15 @@ namespace OCA\User_Servervars2\AppInfo;
 
 $app = new ConfigApp();
 $c = $app->getContainer();
-if ( ! \OCP\App::isEnabled($c->query('AppName')) ) {
+$appName = 'user_servervars2';
+if ( ! \OCP\App::isEnabled( $appName) ) {
 	return;
 }
 
 
 
 //To put a template into admin menu
-//$c->registerAdmin('user_shibb', 'settings');
+\OCP\App::registerAdmin('user_servervars2', 'settings');
 
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
 $c->query('ServerVarsHooks')->register( $app->getUserSession());
