@@ -39,19 +39,34 @@ $authStatus = $c->isLoggedIn();
 
 // - trigger authentication - 
 // http://localhost/core/index.php?XDEBUG_SESSION_START=sublime.xdebug&app=usv2&debug=1
-if(isset($_GET['app']) && $_GET['app'] == 'usv2') {
+
+
+/**
+* To avoid infinite loop it used TWO differents app parameter
+*/
+function checkApp($parm) {
+	return (isset($_GET['app']) && $_GET['app'] == $parm);
+}
+
+
+if( checkApp('usv2') || checkApp('usv2ret') ) {
 
 	$tokens = $app->getTokens();
-        \OC_Log::write('servervars', 'TOKENS'.$tokens,\OC_Log::ERROR);
+        \OC_Log::write('servervars', 'TOKENS{'.$tokens."}, UID->".$uid.", APP=".$_GET['app']."  EPPN=".$_SERVER['eppn'],\OC_Log::ERROR);
 	$uag = $c->query('UserAndGroupService');
 	$uid = $tokens->getUserId();
+        \OC_Log::write('servervars', 'TOKENS{'.$tokens."}, UID->".$uid.", APP=".$_GET['app']."  EPPN=".$_SERVER['eppn'],\OC_Log::ERROR);
 
 	if ( $uid === false ) {
+		if (  checkApp('usv2ret') ) {
+			throw new \Exception('token error');
+		}
 		$ssoURL = $app->getAppConfig()->getValue('user_servervars2', 'sso_url', 'http://localhost/sso');
 		 \OCP\Response::redirect($ssoURL);
-        exit();
+		exit();
 	} 
 
+        \OC_Log::write('servervars', 'NEXT STEP'.$tokens." ".$_GET['app'],\OC_Log::ERROR);
 	$isLoggedIn = $c->isLoggedIn();
 
 	if ( ! $isLoggedIn ) {

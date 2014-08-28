@@ -37,7 +37,7 @@ class ConfigurableTokens implements Tokens {
 	}
 
 	private function getParam($key, $default) {
-		return $this->appConfig->getValue('user_servervars2', $key, $default);
+		return $this->appConfig->getValue('user_servervars2', $key);
 	}
 
  	/**
@@ -45,7 +45,7 @@ class ConfigurableTokens implements Tokens {
  	 * @return provider name or false if none
  	 */
  	public function getProviderId(){
- 		return $this->getParam('tokens_provider_id', 'http://myidp.foo');
+ 		return $this->getParam('tokens_provider_id'); 
  	}
  	/**
  	 * undocumented function
@@ -54,19 +54,36 @@ class ConfigurableTokens implements Tokens {
  	 * @author 
  	 **/
  	public function getUserId() {
- 		return $this->getParam('tokens_user_id', 'foo');
+ 		return $this->evalMapping('tokens_user_id'); //, 'foo');
  	}
 
  	public function getDisplayName(){
- 		return $this->getParam('tokens_display_name', 'bar');
+ 		return $this->evalMapping('tokens_display_name'); //, 'bar');
  	}
 
  	public function getEmail() {
- 		return $this->getParam('tokens_email', 'bar@foo.org');
+ 		return $this->evalMapping('tokens_email'); //, 'bar@foo.org');
  	}
 
  	public function getGroups() {
- 		return explode( '|', $this->getParam('tokens_groups', 'foogrp|bargrp') );
+ 		return explode( '|', $this->evalMapping('tokens_groups')); //, 'foogrp|bargrp') );
  	}
+
+	public function evalMapping($mapping) {
+ 	    $mapping = $this->getParam($param, null);
+	    $f = create_function('', sprintf('return %s;', $mapping));
+\OC_Log::write('servervars',
+                            'EVALMAPPING' . $mapping,
+                            \OC_Log::ERROR);
+
+	    try {
+		$value = $f();
+	    }
+	    catch(Exception $e) {
+		return false;
+	    }
+
+	    return $value;
+	}
 
  }
