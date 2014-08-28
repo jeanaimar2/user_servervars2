@@ -10,7 +10,7 @@ $("#usv2FormID").ready(function() {
 
 
         var s = e.target;
-        var jqTarget = $("#usv2tabs :input[name='"+s.name+"']");
+        var jqTarget = $("#usv2tabs :input[name='"+s.name+"']").parent();
 
 		var fn = function(key, value, okFn) {
             //jqTarget.removeClass("usv2saved");

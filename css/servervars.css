@@ -5,19 +5,30 @@
     margin-bottom: 10px;
 }
 
+
+.block {
+    width: 800px;
+}
+
 .block input[type=text] {
     width: 500px;
 }
+
 .block label { 
   display: inline-block; 
   width: 250px; 
   text-align: right; 
   margin-right: 15px;
 }
-
-input.usv2changed {
+.usv2changed {
+  background: lightYellow; 
+}
+.usv2saved {
+  background: lightGreen; 
+}
+/*input.usv2changed {
   background: lightYellow; 
 }
 input.usv2saved {
   background: lightGreen; 
-}
+}*/
