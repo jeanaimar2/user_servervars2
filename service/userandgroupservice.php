@@ -29,6 +29,8 @@ interface UserAndGroupService {
 	*/
 	public function provisionUser($uid);
 
+	public function isLoggedIn() ;
+
  	public function isAutoCreateUser();
 
  	public function isUpdateUserData();

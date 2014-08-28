@@ -26,6 +26,7 @@ use \OCA\User_Servervars2\Service\TokenService;
 use \OCA\User_Servervars2\Backend\UserBackend;
 use \OCA\User_Servervars2\Service\TokensFactory;
 use \OCA\User_Servervars2\Service\ProxyUserAndGroupService;
+use \OCA\User_Servervars2\AppInfo\Interceptor;
 use \OCA\User_Servervars2\Hook\ServerVarsHooks;
 
 
@@ -78,7 +79,14 @@ class ConfigApp extends App {
 			);
 		});
 
-
+		// Interceptor
+		$container->registerService('Interceptor', function ($c) {
+			return  new Interceptor(
+				$c->query('ServerContainer')->getAppConfig(),  
+				$c->query('Tokens'),
+				$c->query('UserAndGroupService')
+			);
+		});
 
 		// Hooks
 		$container->registerService('ServerVarsHooks', function ($c) {

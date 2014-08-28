@@ -55,35 +55,35 @@ class ConfigurableTokens implements Tokens {
  	 **/
  	public function getUserId() {
  		return $this->evalMapping('tokens_user_id'); //, 'foo');
- 	}
+}
 
- 	public function getDisplayName(){
+public function getDisplayName(){
  		return $this->evalMapping('tokens_display_name'); //, 'bar');
- 	}
+}
 
- 	public function getEmail() {
+public function getEmail() {
  		return $this->evalMapping('tokens_email'); //, 'bar@foo.org');
- 	}
+}
 
- 	public function getGroups() {
+public function getGroups() {
  		return explode( '|', $this->evalMapping('tokens_groups')); //, 'foogrp|bargrp') );
- 	}
+}
 
-	public function evalMapping($mapping) {
- 	    $mapping = $this->getParam($param, null);
-	    $f = create_function('', sprintf('return %s;', $mapping));
-\OC_Log::write('servervars',
-                            'EVALMAPPING' . $mapping,
-                            \OC_Log::ERROR);
+public function evalMapping($param) {
+	$mapping = $this->getParam($param, null);
+	$f = create_function('', sprintf('return %s;', $mapping));
+	\OC_Log::write('servervars',
+		'EVALMAPPING' . $mapping,
+		\OC_Log::ERROR);
 
-	    try {
+	try {
 		$value = $f();
-	    }
-	    catch(Exception $e) {
+	}
+	catch(Exception $e) {
 		return false;
-	    }
-
-	    return $value;
 	}
 
- }
+	return $value;
+}
+
+}

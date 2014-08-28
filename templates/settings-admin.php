@@ -23,7 +23,7 @@
 \OCP\Util::addScript('user_servervars2', 'usv2');
 \OCP\Util::addStyle('user_servervars2', 'servervars');
 ?>
-<div id="usv2settings" >
+<div id="usv2settings" class="section">
 	<h2><?php p($l->t('User ServerVars II'));?></h2>
 	<form name="usv2Form" id="usv2FormID">
 	<div id="usv2tabs">

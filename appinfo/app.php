@@ -32,6 +32,11 @@ if ( ! \OCP\App::isEnabled( $appName) ) {
 
 //To put a template into admin menu
 \OCP\App::registerAdmin('user_servervars2', 'settings');
+$login = array(
+	'href'  => $app->getAppConfig()->getValue('user_servervars2','sso_url'),
+	'name'  => $app->getAppConfig()->getValue('user_servervars2','button_name','use you idp')
+);
+\OC_App::registerLogIn($login);
 
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
 $c->query('ServerVarsHooks')->register( $app->getUserSession());
@@ -40,44 +45,7 @@ $authStatus = $c->isLoggedIn();
 // - trigger authentication - 
 // http://localhost/core/index.php?XDEBUG_SESSION_START=sublime.xdebug&app=usv2&debug=1
 
+//-- TRIGGERS --
+$interceptor = $c->query('Interceptor');
+$interceptor->run();
 
-/**
-* To avoid infinite loop it used TWO differents app parameter
-*/
-function checkApp($parm) {
-	return (isset($_GET['app']) && $_GET['app'] == $parm);
-}
-
-
-if( checkApp('usv2') || checkApp('usv2ret') ) {
-
-	$tokens = $app->getTokens();
-        \OC_Log::write('servervars', 'TOKENS{'.$tokens."}, UID->".$uid.", APP=".$_GET['app']."  EPPN=".$_SERVER['eppn'],\OC_Log::ERROR);
-	$uag = $c->query('UserAndGroupService');
-	$uid = $tokens->getUserId();
-        \OC_Log::write('servervars', 'TOKENS{'.$tokens."}, UID->".$uid.", APP=".$_GET['app']."  EPPN=".$_SERVER['eppn'],\OC_Log::ERROR);
-
-	if ( $uid === false ) {
-		if (  checkApp('usv2ret') ) {
-			throw new \Exception('token error');
-		}
-		$ssoURL = $app->getAppConfig()->getValue('user_servervars2', 'sso_url', 'http://localhost/sso');
-		 \OCP\Response::redirect($ssoURL);
-		exit();
-	} 
-
-        \OC_Log::write('servervars', 'NEXT STEP'.$tokens." ".$_GET['app'],\OC_Log::ERROR);
-	$isLoggedIn = $c->isLoggedIn();
-
-	if ( ! $isLoggedIn ) {
-		$isLoggedIn = $uag->login($uid); 
-	}
-	if ( !$isLoggedIn || !$c->isLoggedIn())  {
-		            \OC_Log::write('servervars',
-                            'Error trying to log-in the user' . $uid,
-                            \OC_Log::DEBUG);
-	}
-
- 	\OC::$REQUESTEDAPP = '';
-	\OC_Util::redirectToDefaultPage();
-}

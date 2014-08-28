@@ -43,7 +43,7 @@ class MuteTokens implements Tokens {
  	 * @author 
  	 **/
  	public function getUserId() {
- 		return "muteTokens: change settings";
+ 		return null;
  	}
 
  	public function getDisplayName(){

@@ -104,6 +104,11 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 	}
 
 
+	public function isLoggedIn() {
+		return \OC_User::isLoggedIn();
+	}
+
+
 		/**
 	 *
 	 * @return String a random password
