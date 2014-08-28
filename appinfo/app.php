@@ -42,6 +42,7 @@ $authStatus = $c->isLoggedIn();
 if(isset($_GET['app']) && $_GET['app'] == 'usv2') {
 
 	$tokens = $app->getTokens();
+        \OC_Log::write('servervars', 'TOKENS'.$tokens,\OC_Log::ERROR);
 	$uag = $c->query('UserAndGroupService');
 	$uid = $tokens->getUserId();
 
@@ -65,5 +66,3 @@ if(isset($_GET['app']) && $_GET['app'] == 'usv2') {
  	\OC::$REQUESTEDAPP = '';
 	\OC_Util::redirectToDefaultPage();
 }
-
-

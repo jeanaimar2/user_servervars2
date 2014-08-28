@@ -67,4 +67,9 @@ class RemoteTokens implements Tokens {
  		return false;
  	}
 
+
+	public function  __toString() {
+		return "<".$this->getProviderId()." ".$this->getUserId()." ".$this->getDisplayName()." ".$this->getEmail()." ".$this->getGroups().">";
+	}
+
  }

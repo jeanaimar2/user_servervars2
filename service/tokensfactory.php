@@ -39,7 +39,7 @@ class TokensFactory {
  	public function getTokens() {
  		$className = $this->appConfig->getValue('user_servervars2', 'tokens_class', '\OCA\User_Servervars2\Service\Impl\RemoteTokens');
  		try { 
- 			$r = new \ReflectionClass($className.'+');
+ 			$r = new \ReflectionClass($className);
  			$object = $r->newInstance( $this->appConfig );
  			return $object;
  		} catch(\ReflectionException $e) {

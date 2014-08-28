@@ -64,8 +64,9 @@ class ServerVarsHooks {
 
 
 	function register($userSession) {
-		$userSession->listen('\OC\User', 'postLogin', function($user, $password) { 
-			return $this->onPostLogin($user, $password); 
+		$obj = $this;
+		$userSession->listen('\OC\User', 'postLogin', function($user, $password) use(&$obj) { 
+			return $obj->onPostLogin($user, $password); 
 		});
 	}
 }
