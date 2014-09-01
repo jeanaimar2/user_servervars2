@@ -18,7 +18,14 @@ L'architecture de cette application repose principalement sur les éléments sui
 * une liste de jetons
 * un backend
 
-== Fonctionnement
+== Fonctionnement général
+
+Cette application délègue l'authentification des utilisateurs à un _fournisseur d'identités_ extérieur à OwnCloud. 
+Le scénario de base est celui-ci
+
+1. l'Utilisateur demande à s'authentifier 
+2. OwnCloud renvoie l'utilisateur vers son Fournisseur d'Identité
+3. Le Fournisseur d'Identité renvoie des informations accessibes 
 
 L'intercepteur `OCA\User_Servervars2\AppInfo\Interceptor` est déclenché lorsque l'url contient la requête `?app=usv2`.
 
