@@ -36,6 +36,7 @@
 			<div class="block"><label><?php p($l->t('Single Log Out Url'))?></label><input type="text" name="slo_url" value="<?php p($_['slo_url'])?>" ></div>
 			<div class="block"><label><?php p($l->t('Auto Create User'))?></label><input type="checkbox" name="auto_create_user" value="1" <?php if($_['auto_create_user']) { p('checked="checked"'); }?> ></div>
 			<div class="block"><label><?php p($l->t('Update User Data'))?></label><input type="checkbox" name="update_user_data" value="1" <?php if($_['update_user_data']) { p('checked="checked"'); }?> ></div>
+			<div class="block"><label><?php p($l->t('Stop If Empty'))?></label><input type="checkbox" name="stop_if_empty" value="1" <?php if($_['stop_if_empty']) { p('checked="checked"'); }?> ></div>
 		</fieldset>
 		<fieldset id="usv2tabs-2">
 			<div class="block"><label><?php p($l->t('Token Class'))?></label><input type="text" name="tokens_class" value="<?php p($_['tokens_class'])?>" ></div>
