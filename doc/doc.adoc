@@ -3,10 +3,27 @@ V 0.1 Marc DEXET (marc.dexet@dsi.cnrs.fr)
 Documentation en français
 :toc:
 
-= Objet du document
-= Présentation
-= Règles de gestion
-= Architecture
-L'architecture de cette application repose sur les éléments suivants
+== Objet du document
+Ce document présente l'application UserServerVars2. Il est rédigé en français et sera traduit en anglais par la suite.
 
-= Autres
+== Présentation
+UserSerVars2 est un _fork_ de user_servervars écrit pas *màj*
+
+== Règles de gestion
+
+== Architecture
+L'architecture de cette application repose principalement sur les éléments suivants
+
+* un intercepteur
+* une liste de jetons
+* un backend
+
+== Fonctionnement
+
+L'intercepteur `OCA\User_Servervars2\AppInfo\Interceptor` est déclenché lors que le paramètre `?app=usv2` est passé dans l'url.
+
+Cet intercepteur va vérifier que les jetons (identifiant, adresse mail, fournisseur d'identité, etc.) sont bien pourvu à l'instant donné.
+
+Le parseur de jetons peut être paramétrés ou une classe dédiée peut être utilisée 
+
+== Autres
