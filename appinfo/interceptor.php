@@ -28,51 +28,69 @@ class Interceptor {
 	var $tokens;
 	var $appConfig;
 	var $uag;
+	var $throwExceptionToExit = false;
 
 
-	function __construct($appConfig, $tokens, $userAndGroupService) {
+	function __construct($appConfig, $tokens, $userAndGroupService, $redirector=null) {
 		$this->appConfig = $appConfig;
 		$this->tokens = $tokens;
 		$this->uag = $userAndGroupService;
+		$this->redirector = $redirector;
+		if ( $this->redirector === null ) {
+			$this->redirector = new DefaultRedirector();
+		}
 	}
 	/**
 	* To avoid infinite loop it used TWO differents app parameter
 	*/
-	function checkApp($parm) {
-		return (isset($_GET['app']) && $_GET['app'] == $parm);
+	function checkGet($name, $value) {
+		return (isset($_GET[$name]) && $_GET[$name] == $value);
 	}	
 
 
 
-
+	/**
+	*
+	*/
 	function run() {
-
-		if( $this->checkApp('usv2') ) {
+		if( $this->checkGet('app','usv2') ) {
 
 			$uid = $this->tokens->getUserId();
 
-			if ( $uid === false ) {
-				if (  $this->getAppConfig()->getValue('user_servervars2','stop_if_empty',false) ) {
+			if ( $uid === false || $uid === null) {
+				if (  $this->appConfig->getValue('user_servervars2','stop_if_empty',false) ) {
 					throw new \Exception('token error');
 				}
-				$ssoURL = $this->getAppConfig()->getValue('user_servervars2', 'sso_url', 'http://localhost/sso');
-				\OCP\Response::redirect($ssoURL);
-				exit();
-			} 
+				// Danger: possibilité de fabriquer une boucle avec janus
+				$ssoURL = $this->appConfig->getValue('user_servervars2', 'sso_url', 'http://localhost/sso');
+				$this->redirector->redirectTo($ssoURL);
 
-			$isLoggedIn = $this->uag->isLoggedIn();
+			} else { 
 
-			if ( ! $isLoggedIn ) {
-				$isLoggedIn = $this->uag->login($uid); 
+				$isLoggedIn = $this->uag->isLoggedIn();
+
+				if ( ! $isLoggedIn ) {
+					$isLoggedIn = $this->uag->login($uid); 
+				}
+				if ( ! $isLoggedIn ) {
+					// if ( !$this->uag->isLoggedIn())  {
+					\OC_Log::write('servervars',
+						'Error trying to log-in the user' . $uid,
+						\OC_Log::DEBUG);
+					return;
+				}
+
+				\OC::$REQUESTEDAPP = '';
+				$this->redirector->redirectToDefaultPage();
 			}
-			if ( !$isLoggedIn || !$this->uag->isLoggedIn())  {
-				\OC_Log::write('servervars',
-					'Error trying to log-in the user' . $uid,
-					\OC_Log::DEBUG);
-			}
+		}
+	}
 
-			\OC::$REQUESTEDAPP = '';
-			\OC_Util::redirectToDefaultPage();
+	function doesExit(){
+		if ($this->throwExceptionToExit ) {
+			throw new \Exception('exit');
+		} else {
+			exit();
 		}
 	}
 }
