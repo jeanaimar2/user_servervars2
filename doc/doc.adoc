@@ -20,21 +20,27 @@ L'architecture de cette application repose principalement sur les éléments sui
 
 == Fonctionnement
 
-L'intercepteur `OCA\User_Servervars2\AppInfo\Interceptor` est déclenché lors que des valeurs du paramètre `?arg=` sont passés dans l'url.
-
-Il en existe deux
-
-* le paramètre d'auto redirection
-* le paramètre de vérification
-
-=== paramètre d'auto redirection 
-
-Ce paramètre, dont l'expression est `?arg=usv2redirect`, déclenche la vérification des jetons et, en leur absence, renvoit vers le fournisseur d'identitée (_paramètre de configuration `sso_url`_)
+L'intercepteur `OCA\User_Servervars2\AppInfo\Interceptor` est déclenché lors que des valeurs du paramètre `?app=` sont passés dans l'url. Ces valeurs sont détaillées par la suite.
 
 Cet intercepteur va vérifier que les jetons (identifiant, adresse mail, fournisseur d'identité, etc.) sont bien pourvu à l'instant donné.
 
 Il est attendu que _normalement_ lorsque le trigger est déclenché
 
 Le parseur de jetons peut être paramétrés ou une classe dédiée peut être utilisée 
+
+
+Il en existe deux qui sont liés
+
+* le paramètre d'auto redirection
+* le paramètre de vérification seule
+
+=== Paramètres 
+==== Paramètre d'auto redirection 
+
+Ce paramètre, dont l'expression est `?argusv2=usv2redirect`, déclenche la vérification des jetons et, en leur absence, renvoit vers le fournisseur d'identitée (_paramètre de configuration `sso_url`_)
+
+==== Paramètre de vérification seule
+
+
 
 == Autres
