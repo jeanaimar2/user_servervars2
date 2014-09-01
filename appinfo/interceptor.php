@@ -47,15 +47,15 @@ class Interceptor {
 
 	function run() {
 
-		if( $this->checkApp('usv2') || $this->checkApp('usv2ret') ) {
+		if( $this->checkApp('usv2') ) {
 
 			$uid = $this->tokens->getUserId();
 
 			if ( $uid === false ) {
-				if (  $this->checkApp('usv2ret') ) {
+				if (  $this->getAppConfig()->getValue('user_servervars2','stop_if_empty',false) ) {
 					throw new \Exception('token error');
 				}
-				$ssoURL = $app->getAppConfig()->getValue('user_servervars2', 'sso_url', 'http://localhost/sso');
+				$ssoURL = $this->getAppConfig()->getValue('user_servervars2', 'sso_url', 'http://localhost/sso');
 				\OCP\Response::redirect($ssoURL);
 				exit();
 			} 
