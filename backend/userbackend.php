@@ -39,13 +39,14 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	var $config;
 
 
-	public function __construct(TokenService $tokenService, AppConfig $config) { //, \OC_User_Interface $proxiedBackend = null
+	public function __construct(TokenService $tokenService, AppConfig $config, $backend=null) { //, \OC_User_Interface $proxiedBackend = null
 		$this->tokenService = $tokenService;
 		$this->config = $config;
-		$this->autoCreateUser = true; //$config->getValue('user_servervars2', 'auto_create_user');
-		$this->updateUserData = true; //$config->getValue('user_servervars2', 'update_user');
+		$this->autoCreateUser = $config->getValue('user_servervars2', 'auto_create_user',false);
+		$this->updateUserData = $config->getValue('user_servervars2', 'update_user',true);
 		$this->defaultGroups = false; //$config->getValue('user_servervars2', 'auto_create_user');
 		$this->protectedGroups = false;
+		$this->proxiedBackend = $backend;
 		if ( is_null($this->proxiedBackend) ) {
 			$this->proxiedBackend = new \OC_User_Database();
 		}
@@ -53,7 +54,6 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	/**
 	* @see \OC\User\manager::checkPassword 
 	*/
-
 	public function checkPassword($uid, $password) {
 		if ( $uid === $this->tokenService->checkTokens() ){
 			return $uid;

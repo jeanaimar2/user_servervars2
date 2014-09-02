@@ -90,14 +90,45 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 
         if ($groups !== false) {
 
+        	$toRemGrps = array();
+        	$toAddGrps = array();
+
         	if ( ! $justCreated ) {
-        		$oldGroups = $this->groupManager->getUserGroups( $justCreated );
-        		$this->cleanGroups($groups, $oldGroups);
+        		$oldGroupArray = $this->groupManager->getUserGroupIds( $uid );
+        		$toRemGrps = array_diff($oldGroupArray, $groups);
+        		$toAddGrps = array_diff($groups, $oldGroupArray);
         	}
-        	$this->updateGroups();
+
+        	$this->addToGroup($uid, $toAddGrps);
+        	$this->removeFromGroup($uid, $toRemGrps);
         }
 
 	}	
+
+
+	public function addToGroup($uid, $gIds) {
+		foreach ($gIds as $groupId) {
+			$group = $this->groupManager->get($groupId);
+			if ( $group === null) {
+				$this->groupManager->createGroup($group);
+			}
+			$group->addToGroup($uid);
+		}
+	}
+
+	public function removeFromGroup($uid, $gIds) {
+		foreach ($gIds as $groupId) {
+			$group = $this->groupManager->get($groupId);
+			if ( $group != null) {
+				$group->removeFromGroup($uid);
+			}
+			
+		}
+	}	
+
+	public function groupExists($group) {
+		return OC_Group::groupExists($group);
+	}
 
 	public function login($uid) {
 		return \OC_User::login($uid, '');
