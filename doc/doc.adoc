@@ -7,7 +7,7 @@ Documentation en français
 Ce document présente l'application UserServerVars2. Il est rédigé en français et sera traduit en anglais par la suite.
 
 == Présentation
-UserSerVars2 est un _fork_ de user_servervars écrit pas *màj*
+UserSerVars2 est un _fork_ de user_servervars écrit par http://apps.owncloud.com/content/show.php/user_servervars?content=158863[user_servervars de Jean-Jacques PUIG]
 
 == Règles de gestion
 
