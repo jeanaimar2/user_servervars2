@@ -9,8 +9,6 @@ Ce document présente l'application UserServerVars2. Il est rédigé en françai
 == Présentation
 UserSerVars2 est un _fork_ http://apps.owncloud.com/content/show.php/user_servervars?content=158863[de user_servervars écrit par Jean-Jacques PUIG]
 
-== Règles de gestion
-
 == Architecture
 L'architecture de cette application repose principalement sur les éléments suivants
 
@@ -23,17 +21,35 @@ L'architecture de cette application repose principalement sur les éléments sui
 Cette application délègue l'authentification des utilisateurs à un _fournisseur d'identités_ extérieur à OwnCloud. 
 Le scénario de base est celui-ci
 
-1. l'Utilisateur demande à s'authentifier 
-2. OwnCloud renvoie l'utilisateur vers son Fournisseur d'Identité
-3. Le Fournisseur d'Identité renvoie des informations accessibes 
+. l'Utilisateur demande à s'authentifier de OwnCloud via un fournisseur d'identité
+. OwnCloud renvoie l'Utilisateur vers son Fournisseur d'Identité en utilisant une redirection 
+. Le Fournisseur d'Identité renvoie l'utilisateur vers OwnCloud avec des informations
+. l'Application extrait les informations pertinentes (liste de _jetons_)
+.. l'Application vérifie la validité des jetons
+.. l'Application peut, au besoin, 
+  * créé l'utilisateur
+  * mettre à jour les informations le concernant
+  * l'ajouter ou le soustraire de groupes en fonction des valeurs de jetons
+  
+== Fonctionnement détaillé
+=== Jetons
+Interface::
+ `OCA\User_Servervars2\Service\Tokens`
+Responsabilités::
+Présenter une vue abstraite des valeurs extraites des informations du fournisseur d'identité
 
-L'intercepteur `OCA\User_Servervars2\AppInfo\Interceptor` est déclenché lorsque l'url contient la requête `?app=usv2`.
+=== Intercepteur
+Classe::
+`OCA\User_Servervars2\AppInfo\Interceptor`
+Responsabilité::
+Intercepter les authentifications via un fournisseur d'identité et déclencher les opérations de _provisionnoing_  
+Comportement::
+L'intercepteur est déclenché lorsque l'url contient la requête ('`_query_`')`?app=usv2`.
 
-Cet intercepteur va vérifier que les jetons (identifiant, adresse mail, fournisseur d'identité, etc.) sont bien pourvu à l'instant donné.
+Exemple _https://my.owncloud.mydomain/index.php?app=usv2_
 
+*Contrairement* à la version d'origine ( `user_servervars` ), *la redirection vers le fournisseur d'identité initial en l'absence de jeton est désactivée*. En effet nous avons estimé que cela représentait un risque important.
 Il est attendu que _normalement_ lorsque le trigger est déclenché quand le jeton est disponible.
-
-*Contrairement* à la version d'origine ( `user_servervars` ), *il n'y a pas de redirection vers le fournisseur d'identité initial*. En effet nous avons estimé que cela représentait un risque important.
 
 Le parseur de jetons peut être paramétrés ou une classe dédiée peut être utilisée 
 
