@@ -52,6 +52,7 @@ Exemple::
 `$uid = $tokens->getUserId();`
 Commentaires::
 Les jetons sont fournis par une TokensFactory.
+
 === Intercepteur
 Classe::
 `OCA\User_Servervars2\AppInfo\Interceptor`
@@ -85,6 +86,7 @@ Permet de définir une classe héritant de  `OCA\User_Servervars2\Service\Tokens
 
 La classe `OCA\User_Servervars2\Service\Impl\ConfigurableTokens` peut être configurée à travers des expressions ou des valeurs litterales comme `$_SERVER['mail']` ou `foo@bar` 
 Les paramètres de configuration sont les suivants 
+
 * tokens_user_id
 * tokens_display_name
 * tokens_email
