@@ -1,0 +1,104 @@
+= User ServerVars II
+V 0.1 Marc DEXET (marc.dexet@dsi.cnrs.fr)
+Documentation en français
+:toc:
+
+== Objet du document
+Ce document présente l'application UserServerVars2. 
+Il est rédigé en français et sera traduit en anglais par la suite.
+
+== Présentation
+UserSerVars2 est un _fork_ http://apps.owncloud.com/content/show.php/user_servervars?content=158863[de user_servervars écrit par Jean-Jacques PUIG]
+
+== Architecture
+L'architecture de cette application repose principalement sur les éléments suivants
+
+* une liste de jetons
+* un intercepteur
+* un backend
+
+== Fonctionnement général
+Le fonctionnement mets en jeu les acteurs suivants
+* L'Utilisateur
+* Le Service OwnCloud
+* L'Application UserServervars2
+* Le Fournisseur d'Identité
+
+
+Le Service OwnCloud délègue l'authentification et l'identification des utilisateurs à un _Fournisseur d'Identités_ extérieur à OwnCloud.footnote:[L'utilisation d'un fournisseur d'identité présuppose la mise en place ou l'utilisation d'outils qui ne seront pas décrites dans le présent document.]
+
+Le Service OwnCloud utilise les informations fournies pour enrichir et mettre à jour son référentiel des utilisateurs
+ 
+Le cas d'usage nominal est le suivant
+
+. l'Utilisateur demande à s'authentifier de OwnCloud via un Fournisseur d'Identité
+. OwnCloud renvoie l'Utilisateur vers son Fournisseur d'Identité en utilisant une redirection 
+. L'Utilisateur s'authentifie auprès de son Fournisseur d'Identité
+. Le Fournisseur d'Identité renvoie l'utilisateur vers OwnCloud avec des informations
+. l'Application extrait les informations pertinentes (liste de _jetons_)
+.l'Application vérifie la validité des jetons
+.l'Application déclenche au besoins les actions : 
+  * création de l'utilisateur au sens OwnCloud (login, mot de passe, ...) 
+  * mise à jour les informations le concernant
+  * ajout ou suppression des groupes en fonction des valeurs de jetons
+  
+== Fonctionnement détaillé des principales classes
+=== Jetons
+Interface::
+ `OCA\User_Servervars2\Service\Tokens`
+Responsabilités::
+Présenter une vue abstraite des valeurs extraites des informations du fournisseur d'identité
+Exemple::
+`$uid = $tokens->getUserId();`
+Commentaires::
+Les jetons sont fournis par une TokensFactory.
+
+=== Intercepteur
+Classe::
+`OCA\User_Servervars2\AppInfo\Interceptor`
+Responsabilités::
+Intercepter les authentifications via un fournisseur d'identité et déclencher les opérations de _provisionning_  
+Comportement::
+L'intercepteur est déclenché lorsque l'URL contient la requête ('`_query_`')`?app=usv2`.
+
+Exemple _https://my.owncloud.mydomain/index.php?app=usv2_
+
+*Contrairement* à la version d'origine ( `user_servervars` ), *la redirection vers le fournisseur d'identité initial en l'absence de jeton est désactivée*.Elle peut-être réactivée (option <<stop_if_empty>> )
+
+Le parseur de jetons peut être paramétré ou une classe dédiée peut être utilisée (option <<tokens_class>>)
+
+=== Backend
+Classe:: 
+`OCA\User_Servervars2\Backend\UserBackend`
+Responsabilités::
+* Répondre de la validité des informations d'authentification de l'utilisateur
+* _Décorer_ le véritable backend qui stocke réellement les informations utilisateur. 
+Commentaires::
+La seule nécessité de ce backend est de fournir la méthode 
+`public function checkPassword($uid, $password) `
+
+== Options de configuration
+=== stop_if_empty
+L'option _stop_if_empty_ permet d'arrêter le processus enclenché par l'intercepteur si les jetons ne sont pas valides et d'empêcher la redirection automatique vers le fournisseur d'identité.
+
+=== tokens_class
+Permet de définir une classe héritant de  `OCA\User_Servervars2\Service\Tokens` pour construire des informations à partir des valeurs fournies par le Fournisseur d'Identité
+
+La classe `OCA\User_Servervars2\Service\Impl\ConfigurableTokens` peut être configurée à travers des expressions ou des valeurs litterales comme `$_SERVER['mail']` ou `foo@bar` 
+Les paramètres de configuration sont les suivants 
+
+* tokens_user_id
+* tokens_display_name
+* tokens_email
+* tokens_group
+
+=== sso_url
+=== slo_url
+=== auto_create_user
+=== update_user
+
+<<<<<<< HEAD
+== Autres
+=======
+== Autres
+>>>>>>> 37da570c2d87fb2ed7da61b4e043366273a48dc7
