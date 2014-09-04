@@ -55,19 +55,19 @@ class ConfigurableTokens implements Tokens {
  	 **/
  	public function getUserId() {
  		return $this->evalMapping('tokens_user_id'); //, 'foo');
-}
+	}
 
-public function getDisplayName(){
- 		return $this->evalMapping('tokens_display_name'); //, 'bar');
-}
+	public function getDisplayName(){
+	 		return $this->evalMapping('tokens_display_name'); //, 'bar');
+	}
 
-public function getEmail() {
- 		return $this->evalMapping('tokens_email'); //, 'bar@foo.org');
-}
+	public function getEmail() {
+	 		return $this->evalMapping('tokens_email'); //, 'bar@foo.org');
+	}
 
-public function getGroups() {
- 		return explode( '|', $this->evalMapping('tokens_groups')); //, 'foogrp|bargrp') );
-}
+	public function getGroupsArray() {
+	 		return explode( '|', $this->evalMapping('tokens_groups')); //, 'foogrp|bargrp') );
+	}
 
 /*
 If eval() is the answer, you're almost certainly asking the

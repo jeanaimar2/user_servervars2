@@ -54,7 +54,7 @@ class MuteTokens implements Tokens {
  		return "muteTokens: change settings";
  	}
 
- 	public function getGroups() {
+ 	public function getGroupsArray() {
  		return "muteTokens: change settings";
  	}
 

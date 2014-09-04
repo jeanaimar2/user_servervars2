@@ -83,7 +83,7 @@ class ConfigApp extends App {
 
 		$container->registerService('GroupNamingServiceFactory', function ($c) {
 			return new \OCA\User_Servervars2\Service\GroupNamingServiceFactory(
-				$c->query('ServerContainer')->getAppConfig(),
+				$c->query('ServerContainer')->getAppConfig()
 			);
 		});
 

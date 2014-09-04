@@ -54,7 +54,7 @@ class RemoteTokens implements Tokens {
  		return $_SERVER['mail'];
  	}
 
- 	public function getGroups() {
+ 	public function getGroupsArray() {
  		return array( $_SERVER['ou'] );
  	}
  	/**
