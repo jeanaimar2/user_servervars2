@@ -41,6 +41,9 @@ interface Tokens {
 
  	public function getEmail();
 
- 	public function getGroups();
+ 	/**
+ 	 * @return array(String => array(String))
+	 */
+ 	public function getGroupsArray();
 
  }

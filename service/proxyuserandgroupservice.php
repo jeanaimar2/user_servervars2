@@ -28,25 +28,46 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 	var $groupManager;
 	var $config;
 	var $backend;
+	var $groupNamingService;
 
-	function __construct($tokenService, $userManager, $groupManager, $backend, $config) {
-		$this->tokenService = $tokenService;
+	function __construct( $userManager, $groupManager, $groupNamingService, $backend, $config ) {
 		$this->userManager = $userManager;
 		$this->backend = $backend;
 		$this->config = $config;
+		$this->groupNamingService = $groupNamingService;
+		$this->groupManager = $groupManager;
 	}	
 
 	/**
 	 * 
 	 * @return created user or false
 	 */
-	public function provisionUser($uid) {
+	public function createUser($uid) {
 		$this->userManager->delete($uid);
 		if (  ! $this->userManager->userExists($uid)) {
 			$randomPaswword = $this->newRandomPassword();
 			//return OC_User::createUser($uid, $randomPaswword);
 			return $this->userManager->createUser($uid, $randomPaswword);
 		}
+	}
+
+
+	public function provisionUser($uid, $tokens) {
+			if ( $this->isAutoCreateUser() ) {
+				$justCreatedUser = $this->createUser($uid);
+			}
+
+			if ( $justCreatedUser || $this->isUpdateUserData() ) {
+
+				$user = $this->userManager->get($uid);
+				$this->updateDisplayName( 	$user, 	$tokens->getDisplayName() );
+				$this->updateMail( 			$uid ,  $tokens->getEmail() );
+
+				if ( $this->isUpdateGroups()) {
+					$this->updateGroup( 		$user, 	$tokens->getGroupsArray() );
+				}
+
+			}
 	}
 
 
@@ -58,16 +79,27 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 		return $this->backend->isUpdateUserData();
 	}
 
-	/**
-	 * Cf. 	OC_User_Backend::OC_USER_BACKEND_GET_DISPLAYNAME => 'getDisplayName',
-	 *	    OC_User_Backend::OC_USER_BACKEND_SET_DISPLAYNAME => 'setDisplayName',
-	 */
-	public function updateDisplayName($uid, $displayName) {
-				// Update if not the same
-		if ( $displayName !== OC_User::getDisplayName($uid) )  {
-			OC_User::setDisplayName( $uid, $displayName );
+	public function isUpdateGroups() {
+		return $this->backend->isUpdateGroups();
+	}	
+
+
+	public function updateDisplayName($user, $name) {
+		if ( $name !== $user->getDisplayName() ) {
+			$user->setDisplayName($name);
 		}
 	}
+
+	// /**
+	//  * Cf. 	OC_User_Backend::OC_USER_BACKEND_GET_DISPLAYNAME => 'getDisplayName',
+	//  *	    OC_User_Backend::OC_USER_BACKEND_SET_DISPLAYNAME => 'setDisplayName',
+	//  */
+	// public function updateDisplayName($uid, $displayName) {
+	// 			// Update if not the same
+	// 	if ( $displayName !== OC_User::getDisplayName($uid) )  {
+	// 		OC_User::setDisplayName( $uid, $displayName );
+	// 	}
+	// }
 
 		/**
 	 * Email is set in preferences (WTF ?)
@@ -79,40 +111,89 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 		}
 	}
 
-	public function updateGroup($uid, $justCreated) {
-		return;
-		$groups 		= $this->tokenService->getGroupsFromToken();
+	/**
+	* 
+	* @param String uid
+	* @param Array attr,names array
+	*/
+	public function updateGroup($user, $groupsArray) {
+
 		$defaultGroups 	= $this->backend->getDefaultGroups();
-		
-		if (empty($groups) && !empty($defaultGroups)) {
-            $groups = $defaultGroups;
+		$uid = $user->getUID();
+
+		if (empty($groupsArray) && !empty($defaultGroups)) {
+            $groupsArray = $defaultGroups;
         }
 
-        if ($groups !== false) {
+        $naming = $this->groupNamingService;
 
-        	$toRemGrps = array();
-        	$toAddGrps = array();
+        $groupNames = $this->getGroupNames($groupsArray, $naming);
 
-        	if ( ! $justCreated ) {
-        		$oldGroupArray = $this->groupManager->getUserGroupIds( $uid );
-        		$toRemGrps = array_diff($oldGroupArray, $groups);
-        		$toAddGrps = array_diff($groups, $oldGroupArray);
-        	}
 
-        	$this->addToGroup($uid, $toAddGrps);
-        	$this->removeFromGroup($uid, $toRemGrps);
-        }
+		$rawOldGroupIds = $this->groupManager->getUserGroupIds( $uid );
+        $oldGroupNames = $this->getOldGroupNames($rawOldGroupIds, $naming);
+
+
+    	$toAddGrps = $this->getGroupNamesToAdd($groupNames, $oldGroupNames);
+    	$toRemGrps = $this->getGroupNamesToRemove($groupNames, $oldGroupNames);
+
+    	$this->addToGroup($user, $toAddGrps);
+    	$this->removeFromGroup($user, $toRemGrps);
 
 	}	
 
 
-	public function addToGroup($uid, $gIds) {
+	function getGroupNamesToAdd($groupNames, $oldGroupNames) {
+    	$toAddGrps = array();
+   		$toAddGrps = array_diff($groupNames, $oldGroupNames);
+   		return $toAddGrps;
+	}
+
+	function getGroupNamesToRemove($groupNames, $oldGroupNames) {
+    	$toAddGrps = array();
+   		$toAddGrps = array_diff($oldGroupNames, $groupNames);
+   		return $toAddGrps;
+	}	
+
+
+	function getGroupNames($groupsArray, $naming) {
+		$groupNames = array();
+		foreach ($groupsArray as $kind => $array) {
+        	if ( $naming->isManaged($kind) ) {
+        		foreach ($array as $value) {
+        			$groupNames[] = $naming->getName($kind,$value);
+        		}
+        	   	
+        	}
+        }
+        return $groupNames;
+	}
+
+	function getOldGroupNames($rawOldGroupIds, $naming) {
+        $oldGroupNames = array();
+        foreach ($rawOldGroupIds as $value) {
+        	if ( $naming->isValid($value)) {
+        		$oldGroupNames[] = $value;
+        	}
+        }
+        return $oldGroupNames;
+	}
+
+	/**
+	* @param OC\User\User user
+	* @param Array group names
+	*/
+	public function addToGroup($user, $gIds) {
 		foreach ($gIds as $groupId) {
 			$group = $this->groupManager->get($groupId);
 			if ( $group === null) {
-				$this->groupManager->createGroup($group);
+				$group = $this->groupManager->createGroup($groupId);
 			}
-			$group->addToGroup($uid);
+			if ( $group ) {
+				$group->addUser($user);
+			} else {
+				throw new \Exception("Creation of '$groupId' has failed", 1);
+			}
 		}
 	}
 

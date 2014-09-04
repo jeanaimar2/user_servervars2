@@ -19,30 +19,20 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
-
-interface UserAndGroupService {
+class MuteGroupNamingService implements OCA\User_Servervars2\Service\GroupNamingService {
+		/**
+	* @param String kind of attribute
+	* @param String value
+	* @return boolean validity of group name according to $kind
+	*/
+	function isValid($kind, $groupName){ return false };
 
 	/**
-	* Quiet user provisionning.
-	* 
-	*/
-	public function provisionUser($uid, $tokens);
-
-	public function createUser($uid);
-
-	public function isLoggedIn() ;
-
- 	public function isAutoCreateUser();
-
- 	public function isUpdateUserData();
-
- 	public function updateDisplayName($uid,  $displayName);
-
- 	public function updateMail($uid, $mail);
-
- 	public function updateGroup($uid, $justCreated);
-
- 	public function login($uid);
-
- }
+	* @param String kind of attribute
+	* @param String value
+	* @return built name according to rules
+	**/
+	function getName($kind, $value) {
+		return null;
+	};
+}

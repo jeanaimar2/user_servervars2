@@ -19,30 +19,31 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
+namespace OCA\User_Servervars2\Service;
+/**
+ * Class responsable for group naming
+ */
+interface GroupNamingService {
 
-interface UserAndGroupService {
 
 	/**
-	* Quiet user provisionning.
-	* 
+	* For a group array as array('ou' => 'code123'), tells if 'ou' is managed or not.
+	* @param String kind
+	* @return TRUE if kind is managed by service
+	*
 	*/
-	public function provisionUser($uid, $tokens);
+	function isManaged($kind);
+	/**
+	* @param String value
+	* @return boolean validity of group name 
+	*/
+	function isValid($groupName);
 
-	public function createUser($uid);
+	/**
+	* @param String kind of attribute
+	* @param String value
+	* @return built name according to rules
+	**/
+	function getName($kind, $value);
 
-	public function isLoggedIn() ;
-
- 	public function isAutoCreateUser();
-
- 	public function isUpdateUserData();
-
- 	public function updateDisplayName($uid,  $displayName);
-
- 	public function updateMail($uid, $mail);
-
- 	public function updateGroup($uid, $justCreated);
-
- 	public function login($uid);
-
- }
+}

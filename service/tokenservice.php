@@ -61,32 +61,19 @@ class TokenService {
 			$attributeName  = $metadata->getUserIdAttributeName($providerId);
 			$scopeValidator = $metadata->getScopeValidator($providerId, $attributeName);
 			if ( $scopeValidator ) {
-				return $scopeValidator->valid(array($uid));
+				if( $scopeValidator->valid(array($uid)) ) {
+					return $uid;
+				} else {
+					return false;
+				}
 			}
 		}
 		return $uid;
 	}
 
-
-	public function getUserIdFromToken() {
-		return $this->tokens->getUserId();
+	public function getTokens() {
+		return $this->tokens;
 	}
 
- 	/**
- 	 *
- 	 * @return Groups array
- 	 */
- 	public function getGroupsFromToken() {
- 		return $this->tokens->getGroups();
- 	} 	
-
-
- 	public function getDisplayName() {
- 		return $this->tokens->getDisplayName();
- 	}
-
- 	public function getEmail()  {
- 		return $this->tokens->getEmail();
- 	}
 
  }

@@ -64,18 +64,26 @@ class ConfigApp extends App {
 		});
 
 
-/*		$container->registerService('GroupManager', function($c) {
-			return new SimpleGroupManager();
-		});*/
+		$container->registerService('GroupManager', function($c) {
+			return new \OC\Group\Manager(
+					$c->query('ServerContainer')->getUserManager()
+				);
+		});
 
 		// Service
 		$container->registerService('UserAndGroupService', function ($c) {
 			return  new ProxyUserAndGroupService(
-				$c->query('TokenService'),  
 				$c->query('ServerContainer')->getUserManager(),
-				null,
+				$c->query('GroupManager'),
+				$c->query('GroupNamingServiceFactory')->getGroupNamingService(),
 				$c->query('UserBackend'),
 				$c->query('ServerContainer')->getConfig()
+			);
+		});
+
+		$container->registerService('GroupNamingServiceFactory', function ($c) {
+			return new \OCA\User_Servervars2\Service\GroupNamingServiceFactory(
+				$c->query('ServerContainer')->getAppConfig(),
 			);
 		});
 

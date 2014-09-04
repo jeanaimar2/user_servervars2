@@ -46,19 +46,7 @@ class ServerVarsHooks {
 		$uid = $user->getUID();
 
 		if ( $uid === $this->tokenService->checkTokens() ) {
-
-			if ( $uag->isAutoCreateUser() ) {
-
-				$justCreatedUser = $uag->provisionUser($uid);
-			}
-
-			if ( $justCreatedUser || $uag->isUpdateUserData() ) {
-
-				$uag->updateDisplayName( $uid, 	$this->tokenService->getDisplayName() );
-				$uag->updateMail( 		$uid ,  $this->tokenService->getEmail());
-				$uag->updateGroup( 		$uid, 	$this->tokenService->getGroupsFromToken() );
-
-			}
+				$justCreatedUser = $uag->provisionUser($uid, $this->tokenService->getTokens() );
 		} 
 	}
 

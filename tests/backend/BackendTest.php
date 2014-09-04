@@ -28,6 +28,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	var $backend;
 	var $tokenService;
+	var $appConfig;
 
 	public function setUp() {
 		
@@ -39,7 +40,9 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 								->disableOriginalConstructor()
 								->getMock();
 
-		$this->backend = new UserBackend( $this->tokenService, $this->proxiedBackend );
+		$this->appConfig = new LocalAppConfig();
+
+		$this->backend = new UserBackend( $this->tokenService, $this->appConfig, $this->proxiedBackend );
 
 	}
 
@@ -50,7 +53,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 	//=========================================================================
 	public function testCheckPassword() {
 		//__GIVEN__
-		$this->configTokenService( array('checkTokens' => true, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
+		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('jean.gabin@myidp.org');
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
@@ -61,7 +64,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCheckPasswordNoUid() {
 		//__GIVEN__
-		$this->configTokenService( array('checkTokens' => true, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
+		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('jean.gabin@myidp.org');
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('','mlkdfmuxm');
@@ -72,7 +75,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCheckPasswordNotSameUid() {
 		//__GIVEN__
-		$this->configTokenService( array('checkTokens' => true, 'getUserIdFromToken' => 'another@myidp.org'));
+		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('another@myidp.org');
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
@@ -84,7 +87,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCheckPasswordCheckFailed() {
 		//__GIVEN__
-		$this->configTokenService( array('checkTokens' => false, 'getUserIdFromToken' => 'jean.gabin@myidp.org'));
+		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn(false);
 
 		//__WHEN__
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
@@ -93,9 +96,17 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 		$this->assertFalse($returnedValue);
 	}	
 
-
-	function configTokenService($__) {
-		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn( $__['checkTokens']);
-		$this->tokenService->expects($this->any())->method('getUserIdFromToken')->willReturn($__['getUserIdFromToken']);
-	}
 }
+
+class LocalAppConfig {
+ 	var $data;
+ 	var $callCount = 0;
+
+ 	function getValue($appName, $key, $default=null) {
+ 		$this->callCount++;
+ 		if ( isset($this->data[$appName]) && isset($this->data[$appName][$key])) {
+ 			return $this->data[$appName][$key];
+ 		}
+ 		return $default;
+ 	}
+ }

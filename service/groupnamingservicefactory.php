@@ -19,30 +19,23 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
+class GroupNamingServiceFactory {
 
-interface UserAndGroupService {
+	function __construct($appConfig) {
+		$this->className = $appConfig->getValue('user_servervars2', 'group_naming_factory', 'OCA\User_Servervars2\Service\Impl\PrependGroupNamingService');
+	}
 
-	/**
-	* Quiet user provisionning.
-	* 
-	*/
-	public function provisionUser($uid, $tokens);
 
-	public function createUser($uid);
-
-	public function isLoggedIn() ;
-
- 	public function isAutoCreateUser();
-
- 	public function isUpdateUserData();
-
- 	public function updateDisplayName($uid,  $displayName);
-
- 	public function updateMail($uid, $mail);
-
- 	public function updateGroup($uid, $justCreated);
-
- 	public function login($uid);
-
- }
+	function getGroupNamingService() {
+		try { 
+ 			$r = new \ReflectionClass($className);
+ 			$object = $r->newInstance( $this->appConfig );
+ 			return $object;
+ 		} catch(\ReflectionException $e) {
+ 			\OCP\Util::writeLog('User_Servervars2',"Class not found exception $className, use \OCA\User_Servervars2\Service\Impl\MuteGroupNamingService instead", \OCP\Util::ERROR);
+ 			$r = new \ReflectionClass('\OCA\User_Servervars2\Service\Impl\MuteTokens');
+ 			$object = $r->newInstance( $this->appConfig );
+ 			return $object;
+ 		}
+	}
+}

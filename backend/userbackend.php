@@ -34,16 +34,17 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	var $proxiedBackend;
 	var $autoCreateUser;
 	var $updateUserData;
+	var $isUpdateGroups;
 	var $defaultGroups;
 	var $protectedGroups;
 	var $config;
 
 
-	public function __construct(TokenService $tokenService, AppConfig $config, $backend=null) { //, \OC_User_Interface $proxiedBackend = null
+	public function __construct(TokenService $tokenService, $config, $backend=null) { //, \OC_User_Interface $proxiedBackend = null
 		$this->tokenService = $tokenService;
-		$this->config = $config;
 		$this->autoCreateUser = $config->getValue('user_servervars2', 'auto_create_user',false);
 		$this->updateUserData = $config->getValue('user_servervars2', 'update_user',true);
+		$this->isUpdateGroups = $config->getValue('user_servervars2', 'update_user',true);
 		$this->defaultGroups = false; //$config->getValue('user_servervars2', 'auto_create_user');
 		$this->protectedGroups = false;
 		$this->proxiedBackend = $backend;
@@ -67,6 +68,11 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 
 	function isUpdateUserData() {
 		return $this->updateUserData;
+	}
+
+
+	function isUpdateGroups() {
+		return $this->isUpdateGroups;
 	}
 
 	function getDefaultGroups() {

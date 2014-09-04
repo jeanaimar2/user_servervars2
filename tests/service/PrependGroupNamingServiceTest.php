@@ -19,30 +19,36 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
- namespace OCA\User_Servervars2\Service;
 
-interface UserAndGroupService {
+class PrependGroupNammingServiceTest extends \PHPUnit_Framework_TestCase {
 
-	/**
-	* Quiet user provisionning.
-	* 
-	*/
-	public function provisionUser($uid, $tokens);
+	var $service;
 
-	public function createUser($uid);
+	public function setUp() {
+		$this->service = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService(
+				'@', 
+				array('ou'=> 'grp', 'o' => 'org')
+			);
+	}
 
-	public function isLoggedIn() ;
 
- 	public function isAutoCreateUser();
+	public function testPrepend() {
+		$this->assertEquals('grp@', $this->service->prepend('ou'));
+	}
 
- 	public function isUpdateUserData();
+	public function testGetName() {
+		$this->assertEquals('grp@tokyo', $this->service->getName('ou', 'tokyo'));
+	}
 
- 	public function updateDisplayName($uid,  $displayName);
+	public function testIsValid() {
+		$this->assertTrue( $this->service->isValid('grp@kyoto'));
+		$this->assertTrue( $this->service->isValid('org@japan'));
 
- 	public function updateMail($uid, $mail);
+		$this->assertFalse( $this->service->isValid('grp_kyoto'));
+		$this->assertFalse( $this->service->isValid('ORG@japan'));
 
- 	public function updateGroup($uid, $justCreated);
+	}
 
- 	public function login($uid);
 
- }
+
+}

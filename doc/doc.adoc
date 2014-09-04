@@ -85,6 +85,9 @@ L'option _stop_if_empty_ permet d'arrêter le processus enclenché par l'interce
 Permet de définir une classe héritant de  `OCA\User_Servervars2\Service\Tokens` pour construire des informations à partir des valeurs fournies par le Fournisseur d'Identité
 
 La classe `OCA\User_Servervars2\Service\Impl\ConfigurableTokens` peut être configurée à travers des expressions ou des valeurs litterales comme `$_SERVER['mail']` ou `foo@bar` 
+
+WARNING: Cette classe ne doit pas être utilisée en production, car elle utilise la fonction `create_function` qui peut être désactivée. Il vaut mieux sa propre classe héritant de  `OCA\User_Servervars2\Service\Tokens` et adaptée à son usage. 
+
 Les paramètres de configuration sont les suivants 
 
 * tokens_user_id

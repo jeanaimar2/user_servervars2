@@ -26,6 +26,6 @@ interface MetadataProvider {
 	/**
 	 * @return Metadata 
 	 */
- 	function getMetadata($idProvider)
+ 	function getMetadata($idProvider);
  
  }

@@ -27,8 +27,9 @@
  class TokenServiceTest extends \PHPUnit_Framework_TestCase {
  	
  	var $service;
- 	var $context;
+ 	var $tokens;
  	var $metadataProvider;
+ 	var $metadata;
  	var $scopeValidator;
 
  	/**
@@ -36,10 +37,11 @@
  	*/
  	protected function setUp(){
  		
- 		$this->context = $this->getMock('OCA\User_Servervars2\Service\Context');
+ 		$this->tokens = $this->getMock('OCA\User_Servervars2\Service\Tokens');
  		$this->metadataProvider = $this->getMock('OCA\User_Servervars2\Backend\MetadataProvider');
+ 		$this->metadata = $this->getMock('OCA\User_Servervars2\Backend\Metadata');
  		$this->scopeValidator = $this->getMock('OCA\User_Servervars2\Backend\scopeValidator');
-	 	$this->service = new TokenService($this->context, $this->metadataProvider);
+	 	$this->service = new TokenService($this->tokens, $this->metadataProvider);
  	}
 
 
@@ -69,7 +71,7 @@
  		$this->setUpContext($uid, $provider, $this->scopeValidator);
 
 	 	//__THEN__
-	 	$this->assertTrue( $this->service->checkTokens() );
+	 	$this->assertEquals('jean.gabin@myidp.org',  $this->service->checkTokens() );
  	}
  	/**
  	 * If uid doesn't match provider
@@ -110,19 +112,24 @@
  	 **/
  	function setUpContext($uid, $provider, $validator) {
  				// : isUserMatchingProviderCallBack
- 		$this->metadataProvider->expects($this->any())
+ 		$this->metadata->expects($this->any())
 	 			->method('getScopeValidator')
 	 			->will( $this->returnValue($validator));
 
- 		$this->metadataProvider->expects($this->any())
+ 		$this->metadata->expects($this->any())
 	 			->method('getUserIdAttributeName')
-	 			->will( $this->returnValue('eppn'));	 			
+	 			->will( $this->returnValue('eppn'));	
+
+	 	$this->metadataProvider->expects( $this->any()) 		
+	 		->method('getMetaData')	
+	 		->with($provider)
+	 		->willReturn( $this->metadata);
 	 	// 
-	 	$this->context->expects($this->any())
+	 	$this->tokens->expects($this->any())
 	 			->method('getUserId')
 	 			->willReturn( $uid );
 
-	 	$this->context->expects($this->any())
+	 	$this->tokens->expects($this->any())
 	 			->method('getProviderId')
 	 			->willReturn( $provider );
 

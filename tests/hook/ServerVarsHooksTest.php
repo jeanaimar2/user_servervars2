@@ -29,11 +29,8 @@ class ServerVarsHooksTest extends \PHPUnit_Framework_TestCase {
 
 	var $hooks;
 	var $tokenService; 
-	var $userManager;
-	var $groupManager;
-	var $backend;
-	var $config;
-
+	var $tokens;
+	var $uag;
 	var $user;
 
 	public function setUp() {
@@ -41,25 +38,17 @@ class ServerVarsHooksTest extends \PHPUnit_Framework_TestCase {
 								->disableOriginalConstructor()
 								->getMock();
 
-		$this->userManager 	= $this->getMockBuilder('\OC\User\Manager')
-								->disableOriginalConstructor()
-								->getMock();
-
-		$this->groupManager 	= $this->getMockBuilder('\OC\Group\Manager')
+		$this->tokens = $this->getMockBuilder('OCA\User_Servervars2\Service\Tokens')
 								->disableOriginalConstructor()
 								->getMock();								
 
-		$this->backend 		= $this->getMockBuilder('\OCA\User_Servervars2\Backend\UserBackend')
+		$this->uag 	= $this->getMockBuilder('OCA\User_Servervars2\Service\UserAndGroupService')
 								->disableOriginalConstructor()
 								->getMock();
 
-		$this->config 		= $this->getMock('\OCP\IConfig');
 
 		$this->hooks 		= new ServerVarsHooks(	$this->tokenService,
-													$this->userManager,
-													$this->groupManager,
-													$this->backend,
-													$this->config);
+													$this->uag);
 
 		$this->user = $this->getMockBuilder('\OC\User\User')
 								->disableOriginalConstructor()
@@ -70,33 +59,44 @@ class ServerVarsHooksTest extends \PHPUnit_Framework_TestCase {
 
 	/**
 	 * Test in mock mode.
+	 * 
 	 */
-	public function testOnPostLoginCreateUser() {
+	public function testOnPostLoginTokensOk() {
 		//__GIVEN__
-		// Backend create but doesn't update
-		$this->backend->expects( $this->any() )->method('isAutoCreateUser')->willReturn(true);
-		$this->backend->expects( $this->any() )->method('isUpdateUserData')->willReturn(false);
+		$this->user->expects( $this->once() )->method('getUID')->willReturn('uid@myidp.org');
 
+		//-------------------------------------------------------------------------------------------
 		$this->tokenService->expects( $this->once() )->method('checkTokens')->willReturn( 'uid@myidp.org' );
-		$this->userManager->expects( $this->once() )->method('userExists')->with('uid@myidp.org')->willReturn( false );
-		$this->userManager->expects( $this->once() )->method('createUser')->willReturn( $this->user );
-
-		// update : 
-		$this->tokenService->expects( $this->once() )->method('getDisplayName')->willReturn( 'Jean GABIN' );
-
-		// --> displayName
-		$this->backend->expects( $this->once() )->method('getDisplayName')->with('uid@myidp.org')->willReturn( null );
-		$this->backend->expects( $this->once() )->method('setDisplayName')->with('uid@myidp.org');
-
-		// --> eMail
-		$this->config->expects( $this->once() )->method('getUserValue')->with( 'uid@myidp.org', 'settings', 'email')->willReturn(false);
-		$this->config->expects( $this->once() )->method('setUserValue')->with( 'uid@myidp.org', 'settings', 'email');
-
+		//-------------------------------------------------------------------------------------------
+		
+		$this->tokenService->expects( $this->once() )->method('getTokens')->willReturn( $this->tokens );
+		$this->uag->expects( $this->once() )->method('provisionUser')->with('uid@myidp.org', $this->tokens)->willReturn( false );
 
 		//__THEN__
-		$this->hooks->onPostLogin('uid@myidp.org', 'password');
+		$this->hooks->onPostLogin( $this->user, 'password');
 
 	}
+
+	/**
+	 * Test in mock mode.
+	 * 
+	 */
+	public function testOnPostLoginTokensNOTOk() {
+		//__GIVEN__
+		$this->user->expects( $this->once() )->method('getUID')->willReturn('uid@myidp.org');
+
+		//-------------------------------------------------------------------------------------------
+		$this->tokenService->expects( $this->once() )->method('checkTokens')->willReturn( false );
+		//-------------------------------------------------------------------------------------------
+
+		$this->tokenService->expects( $this->never() )->method('getTokens');
+		$this->uag->expects( $this->never() )->method('provisionUser');
+
+		//__THEN__
+		$this->hooks->onPostLogin( $this->user, 'password');
+
+	}	
+
 
 
 }

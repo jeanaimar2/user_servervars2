@@ -69,6 +69,10 @@ public function getGroups() {
  		return explode( '|', $this->evalMapping('tokens_groups')); //, 'foogrp|bargrp') );
 }
 
+/*
+If eval() is the answer, you're almost certainly asking the
+wrong question. -- Rasmus Lerdorf, BDFL of PHP
+*/
 public function evalMapping($param) {
 	$mapping = $this->getParam($param, null);
 	$f = create_function('', sprintf('return %s;', $mapping));
