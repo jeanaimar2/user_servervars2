@@ -36,8 +36,8 @@ Le cas d'usage nominal est le suivant
 . L'Utilisateur s'authentifie auprès de son Fournisseur d'Identité
 . Le Fournisseur d'Identité renvoie l'utilisateur vers OwnCloud avec des informations
 . l'Application extrait les informations pertinentes (liste de _jetons_)
-.l'Application vérifie la validité des jetons
-.l'Application déclenche au besoins les actions : 
+. l'Application vérifie la validité des jetons
+. l'Application déclenche au besoins les actions : 
   * création de l'utilisateur au sens OwnCloud (login, mot de passe, ...) 
   * mise à jour les informations le concernant
   * ajout ou suppression des groupes en fonction des valeurs de jetons
