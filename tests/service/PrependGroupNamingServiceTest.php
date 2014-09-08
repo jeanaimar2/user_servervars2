@@ -26,8 +26,10 @@ class PrependGroupNammingServiceTest extends \PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->service = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService(
-				'@', 
-				array('ou'=> 'grp', 'o' => 'org')
+			array( 
+				'separator' => '@', 
+				'mapping' => array('ou'=> 'grp', 'o' => 'org')
+				)
 			);
 	}
 

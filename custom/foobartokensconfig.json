@@ -1,0 +1,9 @@
+{
+	"tokens_provider_id" 	: "provider",
+	"tokens_user_id" 		: "foo@bar",
+	"tokens_display_name" 	: "Foo BAR",
+	"tokens_email" 			: "foo@bar.org",
+	"tokens_groups" 		: {
+		"ou" : ["FooOU"], "o" : ["barORG"]
+	}
+}

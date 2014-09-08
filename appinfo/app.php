@@ -39,6 +39,8 @@ $login = array(
 \OC_App::registerLogIn($login);
 
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
+$app->getGroupManager()->addBackend( new \OC_Group_Database() );
+
 $c->query('ServerVarsHooks')->register( $app->getUserSession());
 $authStatus = $c->isLoggedIn();
 

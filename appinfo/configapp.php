@@ -28,6 +28,7 @@ use \OCA\User_Servervars2\Service\TokensFactory;
 use \OCA\User_Servervars2\Service\ProxyUserAndGroupService;
 use \OCA\User_Servervars2\AppInfo\Interceptor;
 use \OCA\User_Servervars2\Hook\ServerVarsHooks;
+use \OCA\User_Servervars2\Controller\SettingsController;
 
 
 
@@ -125,6 +126,15 @@ class ConfigApp extends App {
 			return  new MetadataMapper();
 		});		
 
+		// Mappers
+		$container->registerService('SettingsController', function ($c) {
+			return new SettingsController(
+				$c->query('Request'),
+				$c->query('ServerContainer')->getAppConfig()
+			);
+		});		
+
+
 	}
 
 
@@ -142,6 +152,10 @@ class ConfigApp extends App {
 
 	public function getUserManager() {
 		return $this->getContainer()->getServer()->getUserManager();
+	}
+
+	public function getGroupManager() {
+		return $this->getContainer()->query('GroupManager');
 	}
 
 	public function getUrlGenerator() {

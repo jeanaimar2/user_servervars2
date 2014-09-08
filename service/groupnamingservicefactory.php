@@ -21,24 +21,37 @@
  */
 
 namespace OCA\User_Servervars2\Service;
-
+use OCA\User_Servervars2\Lib\ConfigHelper;
+/**
+*
+*/
 class GroupNamingServiceFactory {
 
+	var $className;
+	var $appConfig;
+
 	function __construct($appConfig) {
-		$this->className = $appConfig->getValue('user_servervars2', 'group_naming_factory', 'OCA\User_Servervars2\Service\Impl\PrependGroupNamingService');
+		$this->appConfig = $appConfig;
+		$this->className 	 = $this->appConfig->getValue('user_servervars2', 'group_naming_class', 'OCA\User_Servervars2\Service\Impl\PrependGroupNamingService');
+		$this->configuration =  $this->appConfig->getValue('user_servervars2', 'group_naming_conf') ;
 	}
 
-
 	function getGroupNamingService() {
-		try { 
- 			$r = new \ReflectionClass($className);
- 			$object = $r->newInstance( $this->appConfig );
- 			return $object;
- 		} catch(\ReflectionException $e) {
- 			\OCP\Util::writeLog('User_Servervars2',"Class not found exception $className, use \OCA\User_Servervars2\Service\Impl\MuteGroupNamingService instead", \OCP\Util::ERROR);
- 			$r = new \ReflectionClass('\OCA\User_Servervars2\Service\Impl\MuteTokens');
- 			$object = $r->newInstance( $this->appConfig );
- 			return $object;
- 		}
+		$config = null; 
+
+		$helper = new ConfigHelper();
+		$customConfigObj = ( !is_null($this->configuration))  ? $helper->newInstanceOf($this->configuration) : null;
+
+		
+		if ( ! is_null($customConfigObj) ) {
+			$config = $customConfigObj->data;
+		}
+
+		$obj =  $helper->newInstanceOf(
+			$this->className,
+			$config,
+			'OCA\User_Servervars2\Service\Impl\PrependGroupNamingService');
+		
+		return $obj;
 	}
 }

@@ -19,29 +19,15 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\User_Servervars2\Service\Impl;
-use OCA\User_Servervars2\Service\GroupNamingService;
+namespace OCA\User_Servervars2\Custom;
+use OCA\User_Servervars2\Lib\CustomConfig;
 
-class MuteGroupNamingService implements GroupNamingService {
+class FooBarTokensConfig extends CustomConfig {
 
-	function isManaged($kind) {
-		return false;
-	}
-	/**
-	* 
-	* @param String value
-	* @return boolean validity of group name according to $kind
-	*/
-	function isValid($groupName){ 
-		return false;
-	}
-
-	/**
-	* @param String kind of attribute
-	* @param String value
-	* @return built name according to rules
-	**/
-	function getName($kind, $value) {
-		return null;
-	}
+	var $data = array(
+		'tokens_provider_id' => 'provider',
+		'tokens_user_id' => 'foo@bar',
+		'tokens_display_name' => 'Foo BAR',
+		'tokens_email' => 'foo@bar.org',
+		'tokens_groups' => array('ou' => array('FooOU'), 'o' => array('barORG'));
 }

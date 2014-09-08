@@ -19,7 +19,10 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+use OCA\User_servervars2\Lib\ConfigHelper;
+
 $appName = 'user_servervars2';
+$helper = new ConfigHelper();
 $tmpl = new OCP\Template($appName, 'settings-admin');
 // $tmpl->assign('sso_url', OCP\Config::getAppValue($appName, 'sso_url'));
 // $tmpl->assign('slo_url', OCP\Config::getAppValue($appName, 'slo_url'));
@@ -28,15 +31,26 @@ $array = array(
 	'slo_url',
 	'auto_create_user',
 	'update_user_data',
+	'update_groups',
 	'tokens_class',
-	'tokens_provider_id',
-	'tokens_user_id',
-	'tokens_display_name',
-	'tokens_email'
+	'tokens_conf',
+	// 'tokens_provider_id',
+	// 'tokens_user_id',
+	// 'tokens_display_name',
+	// 'tokens_email',
+	// 'tokens_groups',
+	'group_naming_conf',
+	'group_naming_class'
 );
 
 foreach ($array as $key) {
-	$tmpl->assign($key, OCP\Config::getAppValue($appName, $key));
+	$parm = OCP\Config::getAppValue($appName, $key);
+
+	if ( $helper->endsWith($key, 'conf') && $parm) {
+		$tmpl->assign($key.'_data', $helper->getJSon($parm));
+	}
+
+	$tmpl->assign($key, $parm);
 }
 
 return $tmpl->fetchPage();

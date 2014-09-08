@@ -45,7 +45,12 @@ class ProxyUserAndGroupServiceTest extends \PHPUnit_Framework_TestCase {
 									->getMock();
 
 
-		$this->groupNamingService = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService('@', array('ou'=> 'grp', 'o' => 'org'));
+		$this->groupNamingService = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService(
+			array( 
+				'separator' => '@', 
+				'mapping' => array('ou'=> 'grp', 'o' => 'org')
+				)
+			);
 
 
 		$this->backend = $this->getMockBuilder('OCA\User_Servervars2\Backend\UserBackend')
@@ -205,14 +210,13 @@ class ProxyUserAndGroupServiceTest extends \PHPUnit_Framework_TestCase {
 	/**
 	*
 	*/
-	public function testGetGroupNames() {
-		$naming = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService('@', array('ou'=> 'grp', 'o' => 'org'));
+	public function testGetGroupNames() {		
 		$grpArray = array(
 			'ou' => array('tokyo','kyoto'), 
 			'o' => array('japan'), 
 			'foo' => array('bar')
 			);
-		$names = $this->service->getGroupNames($grpArray, $naming);
+		$names = $this->service->getGroupNames($grpArray, $this->groupNamingService);
 		$this->assertEquals( array('grp@tokyo', 'grp@kyoto', 'org@japan'), $names);
 	}
 
@@ -220,9 +224,8 @@ class ProxyUserAndGroupServiceTest extends \PHPUnit_Framework_TestCase {
 	*
 	*/
 	public function testGetOldGroupNames() {
-		$naming = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService('@', array('ou'=> 'grp', 'o' => 'org'));
 		$grpArray = array('grp@tokyo', 'grp@kyoto', 'org@japan', 'foo_bar', 'something', 'admin');
-		$names = $this->service->getOldGroupNames($grpArray, $naming);
+		$names = $this->service->getOldGroupNames($grpArray, $this->groupNamingService);
 		$this->assertEquals( array('grp@tokyo', 'grp@kyoto', 'org@japan'), $names);
 	}	
 

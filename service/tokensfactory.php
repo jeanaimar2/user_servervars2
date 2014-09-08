@@ -21,6 +21,7 @@
  */
 
 namespace OCA\User_Servervars2\Service;
+use OCA\User_Servervars2\Lib\ConfigHelper;
 
 class TokensFactory {
 
@@ -29,25 +30,23 @@ class TokensFactory {
  	 *
  	 * @var AppConfig
  	 **/
- 	var $appConfig;
+ 	var $className;
+ 	var $customConfig;
 
 
  	function __construct($appConfig) {
- 		$this->appConfig = $appConfig;
+ 		$this->className 		= $appConfig->getValue('user_servervars2', 'tokens_class', '\OCA\User_Servervars2\Service\Impl\RemoteTokens');
+ 		$this->customConfig 	= $appConfig->getValue('user_servervars2', 'tokens_conf') ;
  	}
 
  	public function getTokens() {
- 		$className = $this->appConfig->getValue('user_servervars2', 'tokens_class', '\OCA\User_Servervars2\Service\Impl\RemoteTokens');
- 		try { 
- 			$r = new \ReflectionClass($className);
- 			$object = $r->newInstance( $this->appConfig );
- 			return $object;
- 		} catch(\ReflectionException $e) {
- 			\OCP\Util::writeLog('User_Servervars2',"Class not found exception $className, use \OCA\User_Servervars2\Service\Impl\MuteTokens instead", \OCP\Util::ERROR);
- 			$r = new \ReflectionClass('\OCA\User_Servervars2\Service\Impl\MuteTokens');
- 			$object = $r->newInstance( $this->appConfig );
- 			return $object;
- 		}
  		
+ 		$helper = new ConfigHelper();
+ 		$config = $helper->newCustomConfig( $this->customConfig );
+
+ 		return $helper->newInstanceOf(
+ 			$this->className,
+			array($config),
+			'\OCA\User_Servervars2\Service\Impl\MuteTokens'); 		
  	}
  }

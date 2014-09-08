@@ -1,0 +1,7 @@
+{
+	'separator': '@', 
+	'mapping': {
+		'ou':'grp', 
+		'o' :'org'
+	}
+}

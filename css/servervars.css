@@ -20,15 +20,19 @@
   text-align: right; 
   margin-right: 15px;
 }
+
+.block pre { 
+  margin-left: 250px;
+}
+
 .usv2changed {
   background: lightYellow; 
 }
+
 .usv2saved {
   background: lightGreen; 
 }
-/*input.usv2changed {
-  background: lightYellow; 
+
+.usv2error {
+  background: lightCoral;
 }
-input.usv2saved {
-  background: lightGreen; 
-}*/

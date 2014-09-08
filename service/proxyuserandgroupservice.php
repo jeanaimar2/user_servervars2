@@ -130,7 +130,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
         $groupNames = $this->getGroupNames($groupsArray, $naming);
 
 
-		$rawOldGroupIds = $this->groupManager->getUserGroupIds( $uid );
+		$rawOldGroupIds = $this->groupManager->getUserGroupIds( $user );
         $oldGroupNames = $this->getOldGroupNames($rawOldGroupIds, $naming);
 
 

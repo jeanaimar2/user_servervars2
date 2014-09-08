@@ -22,6 +22,7 @@
 namespace OCA\User_Servervars2\Service\Impl;
 
 use OCA\User_Servervars2\Service\Tokens;
+use OCA\User_Servervars2\Lib\CustomConfig;
 
 class ConfigurableTokens implements Tokens {
 
@@ -32,12 +33,12 @@ class ConfigurableTokens implements Tokens {
 	 **/
 	var $appConfig;
 
-	function __construct($appConfig) {
+	function __construct(CustomConfig $appConfig) {
 		$this->appConfig = $appConfig;
 	}
 
 	private function getParam($key, $default) {
-		return $this->appConfig->getValue('user_servervars2', $key);
+		return $this->appConfig->getValue($key);
 	}
 
  	/**
@@ -55,19 +56,19 @@ class ConfigurableTokens implements Tokens {
  	 **/
  	public function getUserId() {
  		return $this->evalMapping('tokens_user_id'); //, 'foo');
-	}
+}
 
-	public function getDisplayName(){
+public function getDisplayName(){
 	 		return $this->evalMapping('tokens_display_name'); //, 'bar');
-	}
+}
 
-	public function getEmail() {
-	 		return $this->evalMapping('tokens_email'); //, 'bar@foo.org');
-	}
+public function getEmail() {
+	return $this->evalMapping('tokens_email'); //, 'bar@foo.org');
+}
 
-	public function getGroupsArray() {
-	 		return explode( '|', $this->evalMapping('tokens_groups')); //, 'foogrp|bargrp') );
-	}
+public function getGroupsArray() {
+	return $this->evalMapping('tokens_groups');
+}
 
 /*
 If eval() is the answer, you're almost certainly asking the
@@ -75,19 +76,29 @@ wrong question. -- Rasmus Lerdorf, BDFL of PHP
 */
 public function evalMapping($param) {
 	$mapping = $this->getParam($param, null);
-	$f = create_function('', sprintf('return %s;', $mapping));
-	\OC_Log::write('servervars',
-		'EVALMAPPING' . $mapping,
-		\OC_Log::ERROR);
 
-	try {
-		$value = $f();
-	}
-	catch(Exception $e) {
-		return false;
-	}
+	// if is a eval expression
+	if ( strpos($mapping, 'eval:') === 0 ) {
+		$mapping=substr($mapping, 5);
+		$f = create_function('', sprintf('return %s;', $mapping));
+		try {
+			$value = $f();
+		}
+		catch(Exception $e) {
+			\OC_Log::write('servervars',
+			'EVALMAPPING' . $mapping.' '.$e->getMessage(),
+			\OC_Log::ERROR);
 
-	return $value;
+			return false;
+		} 
+		return $value;
+
+	} else {
+		return $mapping;
+	}
+	
+
+	
 }
 
 }

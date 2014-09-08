@@ -27,9 +27,13 @@ class PrependGroupNamingService implements GroupNamingService {
 	var $mapping;
 	var $prefixes = array();
 
-	public function __construct($separator = '@', $mapping = null) {
-		if ( is_null($mapping)) {
+	public function __construct($array) {
+		if ( is_null($array)) {
 			$mapping = 'auto';
+			$separator = '@';
+		} else {
+			$mapping 	= $array['mapping'];
+			$separator 	= $array['separator'];
 		}
 		$this->mapping = $mapping;
 		$this->separator = $separator;
