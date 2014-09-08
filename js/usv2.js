@@ -40,7 +40,7 @@ $('#usv2FormID') .ready(function () {
                 key: key,
                 value: value
             }, function (result) {
-                echo('OK:'key+"="+value);
+                echo('OK:'+key+"="+value);
                 jqTarget.removeClass('usv2changed usv2error usv2saved');
                 jqTarget.addClass('usv2saved');
                 jqTarget.removeClass('usv2saved', 2000);
@@ -49,7 +49,7 @@ $('#usv2FormID') .ready(function () {
                     pre.html(result.conf);
                 }
             }, 'json') .fail(function (jqXHR, textStatus, errorThrown) {
-                echo('KO:'key+"="+value);
+                echo('KO:'+key+"="+value);
                 jqTarget.removeClass('usv2changed usv2error usv2saved');
                 jqTarget.find('')
                 jqTarget.addClass('usv2error');
