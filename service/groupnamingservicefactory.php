@@ -40,12 +40,8 @@ class GroupNamingServiceFactory {
 		$config = null; 
 
 		$helper = new ConfigHelper();
-		$customConfigObj = ( !is_null($this->configuration))  ? $helper->newInstanceOf($this->configuration) : null;
+		$customConfigObj = ( !is_null($this->configuration))  ? $helper->newCustomConfig($this->configuration) : null;
 
-		
-		if ( ! is_null($customConfigObj) ) {
-			$config = $customConfigObj->data;
-		}
 
 		$obj =  $helper->newInstanceOf(
 			$this->className,
