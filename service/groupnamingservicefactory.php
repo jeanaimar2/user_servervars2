@@ -37,15 +37,13 @@ class GroupNamingServiceFactory {
 	}
 
 	function getGroupNamingService() {
-		$config = null; 
-
 		$helper = new ConfigHelper();
 		$customConfigObj = ( !is_null($this->configuration))  ? $helper->newCustomConfig($this->configuration) : null;
 
 
 		$obj =  $helper->newInstanceOf(
 			$this->className,
-			$config,
+			array($customConfigObj),
 			'OCA\User_Servervars2\Service\Impl\PrependGroupNamingService');
 		
 		return $obj;

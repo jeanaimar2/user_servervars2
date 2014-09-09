@@ -30,10 +30,16 @@ use OCP\AppFramework\Http;
 class SettingsController extends Controller {
 
 	var $appConfig;
+	var $directories;
 
-	public function __construct($request, $appConfig) {
+	public function __construct($request, $appConfig,$directories=null) {
 		parent::__construct('user_servervars2', $request);
 		$this->appConfig = $appConfig;
+		if ( is_null($directories)) {
+			$directories=array(realpath(join(DIRECTORY_SEPARATOR,array(__DIR__, '.','..' ))));
+		}
+		$this->directories = $directories;
+
 	}
 
 
@@ -80,9 +86,41 @@ class SettingsController extends Controller {
 		} else if ( $endsWith($key, 'conf') ) {
 			
 			$file = $helper->getPath($value);
-			if ( ! file_exists($file) ) {
+			//-----------------------------------------------------
+			// Must end with json extension
+			//-----------------------------------------------------
+			if ( ! $endsWith($file, '.json'))  {
+				throw new \Exception("File '$file' is not a '.json' file");
+			}		
+			//-----------------------------------------------------
+			// Must exist
+			//-----------------------------------------------------
+			$realPath = realpath($file)	;
+			if ( ! $realPath ) {
 				throw new \Exception("File not found $file");
 			}
+			//-----------------------------------------------------
+			// Must be in one of this directories
+			//-----------------------------------------------------
+
+			if ( $this->directories ) {
+				$throwException = true;
+				foreach ($this->directories as $dir) {
+					if ( strpos($realPath, $dir) == 0 ) {
+						$throwException = false;
+						break;
+					}
+				}
+				if ( $throwException ) {
+					throw new \Exception("File '$realPath' is not in allowed directories");
+				}
+			}
+			//-----------------------------------------------------
+			// Must be valid
+			//-----------------------------------------------------
+
+			$this->testJSONValidity(@file_get_contents($file));
+
 			$array['conf'] = $helper->getJSon($value);
 
 		} elseif ( $endsWith($key, 'url')) {
@@ -103,6 +141,15 @@ class SettingsController extends Controller {
 		}
 	}
 
+
+
+	public function testJSONValidity($str) {
+		json_decode($str);
+		$err = json_last_error();
+		if ( $err ) {
+			throw new \Exception("JSON error $err. Content: $str");
+		}
+	}
 	/**
 	* @Ajax
 	*/

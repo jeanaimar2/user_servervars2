@@ -24,7 +24,11 @@ namespace OCA\User_Servervars2\Lib;
 class ConfigHelper {
 	
 	function newInstanceOf($className, $args=null, $default=null) {
+		if ( ! is_null($args) && ! is_array($args) ) {
+			throw new \Exception("args ".print_r($args,1)." is not a array as expected");
+		}
 		try { 
+
 			$r = new \ReflectionClass($className);
 			$object = $r->newInstanceArgs( (array) $args );
  			// $object = $r->newInstanceArgs( );
@@ -39,11 +43,18 @@ class ConfigHelper {
 		}
 	}
 
+	/**
+	* @param String json file location
+	* @return CustomConfig
+	*/
 	function newCustomConfig($arg) {
 		
 		$config = new CustomConfig();
 		$json = $this->getJSon($arg);
-		$config->loadFromJSON($json);
+		$err = $config->loadFromJSON($json);
+		if( $err ) {
+			throw new \Exception("configuration $json is invalid");
+		}
 		return $config;
 	}
 
@@ -61,7 +72,8 @@ class ConfigHelper {
 	function getJSon($arg) {
 		$json = null;
 		$path = $this->getPath($arg);
-		if ( ! file_exists($path) ) {
+		$realPath = realpath($path);
+		if ( ! $realPath ) {
 			\OCP\Util::writeLog('User_Servervars2', "file ".$path." doesn't exist", \OCP\Util::ERROR);;
 		} else {
 			$json = file_get_contents( $path );

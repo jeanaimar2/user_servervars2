@@ -1,7 +1,1 @@
-{
-	'separator': '@', 
-	'mapping': {
-		'ou':'grp', 
-		'o' :'org'
-	}
-}
+{ "separator": "@", "mapping": { "ou":"grp", "o" :"org" } }

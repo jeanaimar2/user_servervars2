@@ -27,13 +27,13 @@ class PrependGroupNamingService implements GroupNamingService {
 	var $mapping;
 	var $prefixes = array();
 
-	public function __construct($array) {
-		if ( is_null($array)) {
+	public function __construct($customConfig) {
+		if ( is_null($customConfig)) {
 			$mapping = 'auto';
 			$separator = '@';
 		} else {
-			$mapping 	= $array['mapping'];
-			$separator 	= $array['separator'];
+			$mapping 	= $customConfig->getValue('mapping');
+			$separator 	= $customConfig->getValue('separator');
 		}
 		$this->mapping = $mapping;
 		$this->separator = $separator;

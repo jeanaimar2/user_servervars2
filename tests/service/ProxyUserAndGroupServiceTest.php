@@ -46,11 +46,13 @@ class ProxyUserAndGroupServiceTest extends \PHPUnit_Framework_TestCase {
 
 
 		$this->groupNamingService = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService(
-			array( 
-				'separator' => '@', 
-				'mapping' => array('ou'=> 'grp', 'o' => 'org')
+			new  \OCA\User_Servervars2\Lib\CustomConfig( 
+				array( 
+					'separator' => '@', 
+					'mapping' => array('ou'=> 'grp', 'o' => 'org')
 				)
-			);
+			)
+		);
 
 
 		$this->backend = $this->getMockBuilder('OCA\User_Servervars2\Backend\UserBackend')

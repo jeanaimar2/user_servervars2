@@ -52,17 +52,35 @@ class SettingsControllerTest extends \PHPUnit_Framework_TestCase {
 	}
 
 
+	/**
+	* Here we test existence of file
+	*/
 	public function testProceedConfigFile() {
 		$array = array();
-		$this->assertTrue(file_exists( __DIR__.DIRECTORY_SEPARATOR.'SettingsControllerTest.php'));
-		$this->controller->proceedConfig($array, 'something_conf', join(DIRECTORY_SEPARATOR,array('controller', 'settingscontroller.php')));
+		$this->assertTrue(file_exists( __DIR__.DIRECTORY_SEPARATOR.'sample.json'));
+		$this->controller->proceedConfig($array, 'something_conf', join(DIRECTORY_SEPARATOR,array('tests','controller', 'sample.json')));
 		try {
-			$this->controller->proceedConfig($array, 'something_conf', __DIR__.DIRECTORY_SEPARATOR.'SettingsControllerTestFOO.php');
+			$this->controller->proceedConfig($array, 'something_conf', __DIR__.DIRECTORY_SEPARATOR.'sampleFOO.json');
 			$this->fail("Must throw exception");
 		} catch(\Exception $e) {
 			$this->assertEquals("File not found", substr($e->getMessage(),0,strlen("File not found")));
 		}
 	}
+
+
+	/**
+	* Here we test existence of file
+	*/
+	public function testJSONValidity() {
+
+		$this->controller->testJSONValidity('{"a": 1}');
+		try {
+			$this->controller->testJSONValidity("{'a': 1}");
+			$this->fail("Must throw exception");
+		} catch(\Exception $e) {
+			$this->assertEquals("JSON error 4. Content: {'a': 1}",$e->getMessage());
+		}
+	}	
 
 	// public function testProceedConfigURLOk() {
 	// 	$array = array();
