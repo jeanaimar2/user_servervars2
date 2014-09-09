@@ -55,7 +55,7 @@ class RemoteTokens implements Tokens {
  	}
 
  	public function getGroupsArray() {
- 		return array( $_SERVER['ou'] );
+ 		return array( $_SERVER['ou'], $_SERVER['o'], $_SERVER['cnrsDelegation'] );
  	}
  	/**
  	* @param array array

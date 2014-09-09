@@ -83,8 +83,10 @@ class PrependGroupNamingService implements GroupNamingService {
 		$v = null;
 		if ( isset($this->mapping[$kind])) {
 			$v = $this->mapping[$kind];
-		} else {
+		} else if(!is_array($this->mapping) ){
 			$v =  $this->mapping;
+		} else {
+			throw new \Exception("Unmanaged kind: $kind");
 		}
 		return strtolower($v).$this->separator;
 	}

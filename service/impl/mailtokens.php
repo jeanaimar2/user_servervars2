@@ -35,4 +35,11 @@ class MailTokens extends RemoteTokens {
  	public function getUserId() {
  		return $this->idx($_SERVER, 'mail');
  	}
-}
+
+ 	public function getGroupsArray() {
+ 		return array( 'ou' => array($_SERVER['ou']),
+ 			'o' => array($_SERVER['o']),
+ 			'dr' => array($_SERVER['cnrsDelegation']) );
+ 	}
+ 	
+ }
