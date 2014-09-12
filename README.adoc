@@ -1,15 +1,12 @@
-user_servervars2
-================
+= user_servervars2
 Utilisation des variables serveurs dans une optique fédération d'identités
 
-Beaucoup d'idées sont reprises de [user_servervars de Jean-Jacques PUIG](http://apps.owncloud.com/content/show.php/user_servervars?content=158863)
+Beaucoup d'idées sont reprises de http://apps.owncloud.com/content/show.php/user_servervars?content=158863[user_servervars de Jean-Jacques PUIG]
 
-
-
-Principes de développement:
-- N'utiliser que les interface PUBLIQUES de owncore 7
-
-server -> \OCP\IServerContainer
+WARNING: état instable !
+WARNING: work in progress
+== Principes de développement:
+* N'utiliser que les interface PUBLIQUES de owncore 7
 
 = Annexes
 Test unitaires (pour mémoire)
