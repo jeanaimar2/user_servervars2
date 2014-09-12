@@ -13,16 +13,15 @@ WARNING: work in progress
 = Annexes
 Test unitaires (pour mémoire)
 
-[source,php]
+[source,dos]
 ----
 set PHPUNIT=c:\servers\xampp\php\phpunit
 %PHPUNIT% --bootstrap tests\bootstrap.php apps\user_servervars2\tests
 ----
 
-[source,php]
+[source,dos]
 ----
 set XDEBUG_CONFIG=sublime.xdebug
-[source,php]
 ----
 
 
