@@ -6,6 +6,7 @@ Beaucoup d'idées sont reprises de http://apps.owncloud.com/content/show.php/use
 WARNING: état instable !
 
 WARNING: work in progress
+
 == Principes de développement:
 * N'utiliser que les interface PUBLIQUES de owncore 7
 
