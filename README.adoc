@@ -4,6 +4,7 @@ Utilisation des variables serveurs dans une optique fédération d'identités
 Beaucoup d'idées sont reprises de http://apps.owncloud.com/content/show.php/user_servervars?content=158863[user_servervars de Jean-Jacques PUIG]
 
 WARNING: état instable !
+
 WARNING: work in progress
 == Principes de développement:
 * N'utiliser que les interface PUBLIQUES de owncore 7
