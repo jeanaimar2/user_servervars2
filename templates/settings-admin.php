@@ -24,7 +24,7 @@
 \OCP\Util::addStyle('user_servervars2', 'servervars');
 ?>
 <div id="usv2settings" class="section">
-	<h2><?php p($l->t('User ServerVars II'));?></h2>
+	<h2><?php p($l->t('Authentication and identification according server\'s variables'));?></h2>
 	<pre class="usv2error" id="usv2settingsError"></pre>
 	<form name="usv2Form" id="usv2FormID">
 	<div id="usv2tabs">

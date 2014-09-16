@@ -2,12 +2,11 @@
 <info>
     <id>user_servervars2</id>
     <name>ServerVars2</name>
-    <description>Simple app that does some computing</description>
+    <description>Authentication and identification according server's variable</description>
     <version>1.0</version>
     <licence>AGPL</licence>
     <author>Marc DeXeT</author>
-    <require>6.0</require>
-    <shipped>true</shipped>
+    <require>7.0</require>
     <types>
     	<type>prelogin</type>
     	<type>authentication</type>
