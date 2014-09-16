@@ -19,23 +19,28 @@ L'architecture de cette application repose principalement sur les éléments sui
 
 == Fonctionnement général
 Le fonctionnement mets en jeu les acteurs suivants
+
 * L'Utilisateur
+* Le Serveur Web
 * Le Service OwnCloud
 * L'Application UserServervars2
 * Le Fournisseur d'Identité
 
 
-Le Service OwnCloud délègue l'authentification et l'identification des utilisateurs à un _Fournisseur d'Identités_ extérieur à OwnCloud.footnote:[L'utilisation d'un fournisseur d'identité présuppose la mise en place ou l'utilisation d'outils qui ne seront pas décrites dans le présent document.]
+L'Application UserServervars2 peut précéder à l'authentification et l'identification des utilisateurs au vue de certaines variables gérées par le serveur. Généralement ces variables sont valorisées par un mécanisme externe, comme Shibboleth, mod_mellon ou autre. C'est le Fournisseur d'Identitées.footnote:[L'utilisation d'un fournisseur d'identité présuppose la mise en place ou l'utilisation d'outils qui ne seront pas décrites dans le présent document.]
 
-Le Service OwnCloud utilise les informations fournies pour enrichir et mettre à jour son référentiel des utilisateurs
+L'Application utilise les informations fournies pour enrichir et mettre à jour le référentiel des utilisateurs de OwnCloud.
  
+
+=== Cas d'usage
 Le cas d'usage nominal est le suivant
 
 . l'Utilisateur demande à s'authentifier de OwnCloud via un Fournisseur d'Identité
 . OwnCloud renvoie l'Utilisateur vers son Fournisseur d'Identité en utilisant une redirection 
 . L'Utilisateur s'authentifie auprès de son Fournisseur d'Identité
 . Le Fournisseur d'Identité renvoie l'utilisateur vers OwnCloud avec des informations
-. l'Application extrait les informations pertinentes (liste de _jetons_)
+. Le Serveur Web enrichit les variables globales ( +$_SERVER+, +$_GET+, etc.)
+. l'Application extrait des variables globales les informations pertinentes et en déduit une liste de _jetons_
 . l'Application vérifie la validité des jetons
 . l'Application déclenche au besoins les actions : 
   * création de l'utilisateur au sens OwnCloud (login, mot de passe, ...) 
@@ -52,6 +57,33 @@ Exemple::
 `$uid = $tokens->getUserId();`
 Commentaires::
 Les jetons sont fournis par une TokensFactory.
+
+[source,php]
+----
+interface Tokens {
+
+ 	/**
+ 	 * Return the identity provider ( as 'https://idp.example.org/idp/shibboleth')
+ 	 * @return provider name or false if none
+ 	 */
+ 	public function getProviderId();
+
+ 	/**
+ 	 * @return user id or false is none
+ 	 **/
+ 	public function getUserId();
+
+ 	public function getDisplayName();
+
+ 	public function getEmail();
+
+ 	/**
+ 	 * @return array(String => array(String))
+	 */
+ 	public function getGroupsArray();
+
+ }
+----
 
 === Intercepteur
 Classe::
@@ -75,29 +107,149 @@ Responsabilités::
 * _Décorer_ le véritable backend qui stocke réellement les informations utilisateur. 
 Commentaires::
 La seule nécessité de ce backend est de fournir la méthode 
-`public function checkPassword($uid, $password) `
+[source,php]
+public function checkPassword($uid, $password)
 
 == Options de configuration
+
+Les options de configurations sont de 3 natures
+
+. paramètre simple
+. classe PHP
+. chemin de fichier de configuration de la classe au format json
+
+=== sso_url
+URL de redirection vers le Fournisseur d'identité
+
+Exemple: 
+
+=== slo_url
+URL de Single Log Out
+
+=== auto_create_user
+L'option permet de créer des utilisateurs lors de leur première authentification.
+
+=== update_user
+Permet de mettre à jour les informations 
+
 === stop_if_empty
 L'option _stop_if_empty_ permet d'arrêter le processus enclenché par l'intercepteur si les jetons ne sont pas valides et d'empêcher la redirection automatique vers le fournisseur d'identité.
 
-=== tokens_class
+=== update_groups
+Mise à jour automatique des groupes. Nécessite l'usage de <<group_naming_class>>
+
+=== Tokens
+La configuration des `Tokens` (`Jetons`) s'effectue à travers les paramètres `token_class` et `tokens_conf` 
+
+==== tokens_class
 Permet de définir une classe héritant de  `OCA\User_Servervars2\Service\Tokens` pour construire des informations à partir des valeurs fournies par le Fournisseur d'Identité
 
+==== tokens_conf
+Permet d'indiquer un fichier de configuration au format json avec son chemin relatif à `apps/user_servervars2` **sans usage des noms de répertoires courant et supérieurs comme `./` et `../`  
+
+==== ConfigurableTokens
 La classe `OCA\User_Servervars2\Service\Impl\ConfigurableTokens` peut être configurée à travers des expressions ou des valeurs litterales comme `$_SERVER['mail']` ou `foo@bar` 
 
-WARNING: Cette classe ne doit pas être utilisée en production, car elle utilise la fonction `create_function` qui peut être désactivée. Il vaut mieux sa propre classe héritant de  `OCA\User_Servervars2\Service\Tokens` et adaptée à son usage. 
+Elle doit être configurée à l'aide d'un fichier json mentionné au paramètre `tokens_conf`
 
-Les paramètres de configuration sont les suivants 
+Par exemple, la configuration de test custom/foobartokensconfig.json
+[source,json]
+----
+{
+	"tokens_provider_id" 	: "provider",
+	"tokens_user_id" 		: "foo@bar",
+	"tokens_display_name" 	: "Foo BAR",
+	"tokens_email" 			: "foo@bar.org",
+	"tokens_groups" 		: {
+		"ou" : ["FooOU"], "o" : ["barORG"]
+	}
+}
+----
 
-* tokens_user_id
-* tokens_display_name
-* tokens_email
-* tokens_group
+Pour qu'une valeur soit __évaluée_, elle doit être préfixée par `eval:` comme 
+`eval:$SERVER['mail']`
 
-=== sso_url
-=== slo_url
-=== auto_create_user
-=== update_user
+WARNING: Il n'est recommandé d'utiliser la classe `ConfigurableTokens` en production, il vaut mieux créer sa propre classe héritant de  `OCA\User_Servervars2\Service\Tokens` et l'adapter à son usage. 
 
-== Autres
+=== Nommage de groupe
+La faculté de création de groupe et d'affectation automatiques se font à travers 2 paramètres
+
+==== group_naming_class
+Indique la classe en charge d'appliquer la politique de nommage des groupes.
+
+Cette classe doit implémenter l'interface `OCA\User_Servervars2\Service\GroupNamingService`.
+
+[source,php]
+----
+namespace OCA\User_Servervars2\Service;
+/**
+ * Class responsable for group naming
+ */
+interface GroupNamingService {
+
+
+	/**
+	* For a group array as array('ou' => 'code123'), tells if 'ou' is managed or not.
+	* @param String kind
+	* @return TRUE if kind is managed by service
+	*
+	*/
+	function isManaged($kind);
+	/**
+	* @param String value
+	* @return boolean validity of group name 
+	*/
+	function isValid($groupName);
+
+	/**
+	* @param String kind of attribute
+	* @param String value
+	* @return built name according to rules
+	**/
+	function getName($kind, $value);
+
+}
+----
+
+WARNING: La politique de groupe permet d'ajouter mais également de retirer des utilisateurs de groupes. Pour savoir si un groupe est géré ou pas, la classe devra utiliser la méthode `isValid($groupName)`. L'algorithme doit donc être capable de déterminer à partir du simple nom si le groupe est manipulable.
+[source,php]
+----
+	function getOldGroupNames($rawOldGroupIds, $naming) {
+        $oldGroupNames = array();
+        foreach ($rawOldGroupIds as $value) {
+        	if ( $naming->isValid($value)) {
+        		$oldGroupNames[] = $value;
+        	}
+        }
+        return $oldGroupNames;
+	}
+----
+
+==== Group_naming_conf
+Indique l'emplacement du fichier de configuration json attenant.
+
+
+==== PrependGroupNamingService 
+
+PrependGroupNamingService est une classe qui gère les noms de groupes en ajoutant un suffixe au nom en fonction de ce que la classe _jetons_ retourne à l'appel de la méthode 
+[source,php]
+public function getGroupsArray();
+
+Un exemple de configuration est 
+[source,json]
+----
+{ "separator": "@", "mapping": { "ou":"unit", "o" :"org" } }
+----
+
+Cette configuration fera le lien entre les variables serveur et les noms de groupe. Par exemple si `Tokens::getGroupsArray();` retourne un tableau comme
+[source,php]
+----
+groupsArray = array("ou" => array("paris", "tokyo"), "o" => array("foo", "bar"));
+----
+
+Les groupes suivants seront automatiquement mis à jour :
+
+. unit@paris
+. unit@tokyo
+. org@foo
+. org@bar
