@@ -66,6 +66,8 @@ class ConfigHelper {
 
 
 	function getPath($arg) {
+		// No go up
+		$arg = preg_replace('(\.+[/\\\])', '', $arg);
 		return join(DIRECTORY_SEPARATOR,array( __DIR__, '.','..',$arg));
 	}
 
