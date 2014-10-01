@@ -31,7 +31,8 @@ if ( ! \OCP\App::isEnabled( $appName) ) {
 
 
 //To put a template into admin menu
-\OCP\App::registerAdmin('user_servervars2', 'settings');
+\OCP\App::registerAdmin('user_servervars2', 'settings/admin');
+\OCP\App::registerPersonal('user_servervars2', 'settings/user');
 $login = array(
 	'href'  => $app->getAppConfig()->getValue('user_servervars2','sso_url'),
 	'name'  => $app->getAppConfig()->getValue('user_servervars2','button_name','use you idp')
@@ -39,7 +40,7 @@ $login = array(
 \OC_App::registerLogIn($login);
 
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
-$app->getGroupManager()->addBackend( new \OC_Group_Database() );
+//$app->getGroupManager()->addBackend( new \OC_Group_Database() );
 
 $c->query('ServerVarsHooks')->register( $app->getUserSession());
 $authStatus = $c->isLoggedIn();

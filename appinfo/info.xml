@@ -3,12 +3,12 @@
     <id>user_servervars2</id>
     <name>ServerVars2</name>
     <description>Authentication and identification according server's variable</description>
-    <version>1.0</version>
+    <version>1.1</version>
     <licence>AGPL</licence>
     <author>Marc DeXeT</author>
     <require>7.0</require>
     <types>
-    	<type>prelogin</type>
-    	<type>authentication</type>
+    	<prelogin/>
+    	<authentication/>
     </types>
 </info>

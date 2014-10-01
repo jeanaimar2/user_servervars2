@@ -66,7 +66,6 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 				if ( $this->isUpdateGroups()) {
 					$this->updateGroup( 		$user, 	$tokens->getGroupsArray() );
 				}
-
 			}
 	}
 
@@ -158,12 +157,13 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 
 	function getGroupNames($groupsArray, $naming) {
 		$groupNames = array();
-		foreach ($groupsArray as $kind => $array) {
-        	if ( $naming->isManaged($kind) ) {
-        		foreach ($array as $value) {
-        			$groupNames[] = $naming->getName($kind,$value);
-        		}
-        	   	
+		if ( is_array($groupsArray)) {
+			foreach ($groupsArray as $kind => $array) {
+	        	if ( $naming->isManaged($kind) ) {
+	        		foreach ($array as $value) {
+	        			$groupNames[] = $naming->getName($kind,$value);
+	        		}
+        	   	}
         	}
         }
         return $groupNames;
@@ -201,7 +201,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 		foreach ($gIds as $groupId) {
 			$group = $this->groupManager->get($groupId);
 			if ( $group != null) {
-				$group->removeFromGroup($uid);
+				$group->removeUser($uid);
 			}
 			
 		}

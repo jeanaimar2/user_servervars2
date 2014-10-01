@@ -37,7 +37,7 @@ class ConfigurableTokens implements Tokens {
 		$this->appConfig = $appConfig;
 	}
 
-	private function getParam($key, $default) {
+	private function getParam($key, $default=null) {
 		return $this->appConfig->getValue($key);
 	}
 
@@ -78,6 +78,7 @@ public function evalMapping($param) {
 	$mapping = $this->getParam($param, null);
 
 	// if is a eval expression
+	if ( ! is_string($mapping) ) return;
 	if ( strpos($mapping, 'eval:') === 0 ) {
 		$mapping=substr($mapping, 5);
 		$f = create_function('', sprintf('return %s;', $mapping));
