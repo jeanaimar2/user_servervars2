@@ -32,6 +32,7 @@ class ServerVarsHooksTest extends \PHPUnit_Framework_TestCase {
 	var $tokens;
 	var $uag;
 	var $user;
+	var $appConfig;
 
 	public function setUp() {
 		$this->tokenService = $this->getMockBuilder('OCA\User_Servervars2\Service\TokenService')
@@ -46,9 +47,11 @@ class ServerVarsHooksTest extends \PHPUnit_Framework_TestCase {
 								->disableOriginalConstructor()
 								->getMock();
 
+		$this->appConfig 	= new LocalAppConfig();
 
 		$this->hooks 		= new ServerVarsHooks(	$this->tokenService,
-													$this->uag);
+													$this->uag,
+													$this->appConfig);
 
 		$this->user = $this->getMockBuilder('\OC\User\User')
 								->disableOriginalConstructor()
@@ -97,6 +100,19 @@ class ServerVarsHooksTest extends \PHPUnit_Framework_TestCase {
 
 	}	
 
-
-
 }
+
+
+
+class LocalAppConfig {
+ 	var $data;
+ 	var $callCount = 0;
+
+ 	function getValue($appName, $key, $default=null) {
+ 		$this->callCount++;
+ 		if ( isset($this->data[$appName]) && isset($this->data[$appName][$key])) {
+ 			return $this->data[$appName][$key];
+ 		}
+ 		return $default;
+ 	}
+ }

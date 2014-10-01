@@ -31,11 +31,18 @@ class ServerVarsHooks {
 
 	var $tokenService;
 	var $userAndGroupService;
+	var $redirector;
+	var $appConfig;
 
 
-	function __construct($tokenService, $userAndGroupService, $logger=null) {
+	function __construct($tokenService, $userAndGroupService, $appConfig, $redirector=null) {
 		$this->tokenService = $tokenService;
 		$this->userAndGroupService = $userAndGroupService;
+		$this->redirector = $redirector;
+		if ( $this->redirector === null ) {
+			$this->redirector = new \OCA\User_Servervars2\AppInfo\DefaultRedirector();
+		}
+		$this->appConfig = $appConfig;
 	}
 
 
@@ -51,10 +58,19 @@ class ServerVarsHooks {
 	}
 
 
+
+
 	function register($userSession) {
 		$obj = $this;
 		$userSession->listen('\OC\User', 'postLogin', function($user, $password) use(&$obj) { 
 			return $obj->onPostLogin($user, $password); 
+		});
+
+		$userSession->listen('\OC\User', 'logout', function() use(&$obj) {
+			$sloUrl = $this->appConfig->getValue('user_servervars2','slo_url');
+			if ( ! empty($sloUrl) ) {
+				$this->redirector->redirectTo($sloUrl);
+			}
 		});
 	}
 }

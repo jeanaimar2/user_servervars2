@@ -102,7 +102,8 @@ class ConfigApp extends App {
 		$container->registerService('ServerVarsHooks', function ($c) {
 			return  new ServerVarsHooks(
 				$c->query('TokenService'),
-				$c->query('UserAndGroupService')
+				$c->query('UserAndGroupService'),
+				$c->query('ServerContainer')->getAppConfig()
 			);
 		});
 

@@ -118,28 +118,13 @@ Les options de configurations sont de 3 natures
 . classe PHP
 . chemin de fichier de configuration de la classe au format json
 
-Elles sont fréparties sur 4 onglets
+Elles sont réparties sur 4 onglets
 
 * A la connexion de l'utilisateur
 * URL
 * Jetons
 * Nommage de groupe
 
-
-=== URL de redirection vers IDP (Single Sign On Url), 
-_clef de configuration: sso_url_
-
-URL de redirection vers le Fournisseur d'identité
-
-=== URL de redirection pour déconnexion (Single Log Out Url), 
-_clef de configuration: slo_url_
-
-URL de Single Log Out
-
-=== Libellé du bouton de la page de Login (Login Button Label), 
-_clef de configuration: button_name_
-
-Libellé du bouton de la page de Login
 
 === Créer le compte utilisateur (Auto Create User), 
 _clef de configuration:  auto_create_user_
@@ -160,6 +145,24 @@ L'option _stop_if_empty_ permet d'arrêter le processus enclenché par l'interce
 _clef de configuration:  update_groups_
 
 Mise à jour automatique des groupes. Nécessite l'usage de <<group_naming_class>>
+
+
+=== URL de redirection vers IDP (Single Sign On Url), 
+_clef de configuration: sso_url_
+
+URL de redirection vers le Fournisseur d'identité
+
+=== URL de redirection pour déconnexion (Single Log Out Url), 
+_clef de configuration: slo_url_
+
+URL de Single Log Out
+
+=== Libellé du bouton de la page de Login (Login Button Label), 
+_clef de configuration: button_name_
+
+Libellé du bouton de la page de Login
+
+
 
 === Jetons (Tokens), 
 
