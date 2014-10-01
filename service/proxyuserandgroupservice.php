@@ -212,7 +212,10 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 	}
 
 	public function login($uid) {
-		return \OC_User::login($uid, '');
+		$this->backend->startLoginCycle($uid);
+		$response = \OC_User::login($uid, '');
+		$this->backend->endLoginCycle($uid);
+		return $response;
 	}
 
 

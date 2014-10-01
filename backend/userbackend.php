@@ -38,6 +38,7 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	var $defaultGroups;
 	var $protectedGroups;
 	var $config;
+	var $currentUid = null;
 
 
 	public function __construct(TokenService $tokenService, $config, $backend=null) { //, \OC_User_Interface $proxiedBackend = null
@@ -52,10 +53,27 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 			$this->proxiedBackend = new \OC_User_Database();
 		}
 	}
+
+	/**
+	* Flag for Login cycle because of IDP cookies are persistant
+	*/
+	public function startLoginCycle($uid) {
+		$this->currentUid = $uid;
+	}
+
+	/**
+	* Flag for Login cycle because of IDP cookies are persistant
+	*/
+	public function endLoginCycle($uid) {
+		$this->currentUid = null;
+	}
+
 	/**
 	* @see \OC\User\manager::checkPassword 
 	*/
 	public function checkPassword($uid, $password) {
+		if ( $uid !== $this->currentUid ) return FALSE;
+
 		if ( $uid === $this->tokenService->checkTokens() ){
 			return $uid;
 		}

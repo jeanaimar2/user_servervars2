@@ -68,9 +68,9 @@ class ServerVarsHooks {
 
 		$userSession->listen('\OC\User', 'logout', function() use(&$obj) {
 			$sloUrl = $this->appConfig->getValue('user_servervars2','slo_url');
-			if ( ! empty($sloUrl) ) {
-				$this->redirector->redirectTo($sloUrl);
-			}
+			// if ( ! empty($sloUrl) ) {
+			// 	$this->redirector->redirectTo($sloUrl);
+			// }
 		});
 	}
 }
