@@ -43,6 +43,7 @@
 		<fieldset id="usv2tabs-2">
 			<div class="block"><label><?php p($l->t('Single Sign On Url'))?></label><input type="text" name="sso_url" value="<?php p($_['sso_url'])?>"></div>
 			<div class="block"><label><?php p($l->t('Single Log Out Url'))?></label><input type="text" name="slo_url" value="<?php p($_['slo_url'])?>" ></div>
+			<div class="block"><label><?php p($l->t('Button Label'))?></label><input type="text" name="button_name" value="<?php p($_['button_name'])?>" ></div>
 		</fieldset>
 		<fieldset id="usv2tabs-3">
 			<div class="block">

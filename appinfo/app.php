@@ -35,7 +35,7 @@ if ( ! \OCP\App::isEnabled( $appName) ) {
 \OCP\App::registerPersonal('user_servervars2', 'settings/user');
 $login = array(
 	'href'  => $app->getAppConfig()->getValue('user_servervars2','sso_url'),
-	'name'  => $app->getAppConfig()->getValue('user_servervars2','button_name','use you idp')
+	'name'  => $app->getAppConfig()->getValue('user_servervars2','button_name','Use Your ID Provider')
 );
 \OC_App::registerLogIn($login);
 

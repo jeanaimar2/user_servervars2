@@ -40,7 +40,8 @@ $array = array(
 	// 'tokens_email',
 	// 'tokens_groups',
 	'group_naming_conf',
-	'group_naming_class'
+	'group_naming_class',
+	'button_name'
 );
 
 foreach ($array as $key) {

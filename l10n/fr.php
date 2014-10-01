@@ -16,4 +16,5 @@ $TRANSLATIONS = array(
 	"Tokens Conf" 		=> "Fichier de configuration pour le provisionning utilisateur",
 	"GroupNaming Class" => "Classe politique de nommage des groupes",
 	"GroupNaming Conf" => "Fichier de configuration politique de nommage des groupes",
+	"Login Button Label"		=> "Libellé du bouton de la page de Login"
 	);
