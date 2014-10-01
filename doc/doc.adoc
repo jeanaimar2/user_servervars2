@@ -118,33 +118,61 @@ Les options de configurations sont de 3 natures
 . classe PHP
 . chemin de fichier de configuration de la classe au format json
 
-=== sso_url
+Elles sont fréparties sur 4 onglets
+
+* A la connexion de l'utilisateur
+* URL
+* Jetons
+* Nommage de groupe
+
+
+=== URL de redirection vers IDP (Single Sign On Url), 
+_clef de configuration: sso_url_
+
 URL de redirection vers le Fournisseur d'identité
 
-Exemple: 
+=== URL de redirection pour déconnexion (Single Log Out Url), 
+_clef de configuration: slo_url_
 
-=== slo_url
 URL de Single Log Out
 
-=== auto_create_user
+=== Libellé du bouton de la page de Login (Login Button Label), 
+_clef de configuration: button_name_
+
+Libellé du bouton de la page de Login
+
+=== Créer le compte utilisateur (Auto Create User), 
+_clef de configuration:  auto_create_user_
+
 L'option permet de créer des utilisateurs lors de leur première authentification.
 
-=== update_user
+=== Mettre à jour informations utilisateur (Update User Data), 
+_clef de configuration:  update_user_
+
 Permet de mettre à jour les informations 
 
-=== stop_if_empty
+=== Arrêter l'authentification si jetons invalides (Stop If Empty), 
+_clef de configuration:  stop_if_empty_
+
 L'option _stop_if_empty_ permet d'arrêter le processus enclenché par l'intercepteur si les jetons ne sont pas valides et d'empêcher la redirection automatique vers le fournisseur d'identité.
 
-=== update_groups
+=== Mettre à jour groupes utilisateur (Update User Groups), 
+_clef de configuration:  update_groups_
+
 Mise à jour automatique des groupes. Nécessite l'usage de <<group_naming_class>>
 
-=== Tokens
+=== Jetons (Tokens), 
+
 La configuration des `Tokens` (`Jetons`) s'effectue à travers les paramètres `token_class` et `tokens_conf` 
 
-==== tokens_class
+==== Classe pour le provisionning utilisateur (Tokens Class), 
+_clef de configuration: tokens_class_
+
 Permet de définir une classe héritant de  `OCA\User_Servervars2\Service\Tokens` pour construire des informations à partir des valeurs fournies par le Fournisseur d'Identité
 
-==== tokens_conf
+==== Fichier de configuration pour le provisionning utilisateur (Tokens Conf), 
+_clef de configuration: tokens_conf_
+
 Permet d'indiquer un fichier de configuration au format json avec son chemin relatif à `apps/user_servervars2` **sans usage des noms de répertoires courant et supérieurs comme `./` et `../`  
 
 ==== ConfigurableTokens
@@ -174,7 +202,9 @@ WARNING: Il n'est recommandé d'utiliser la classe `ConfigurableTokens` en produ
 === Nommage de groupe
 La faculté de création de groupe et d'affectation automatiques se font à travers 2 paramètres
 
-==== group_naming_class
+==== Classe politique de nommage des groupes (GroupNaming Class), 
+_clef de configuration: group_naming_class_
+
 Indique la classe en charge d'appliquer la politique de nommage des groupes.
 
 Cette classe doit implémenter l'interface `OCA\User_Servervars2\Service\GroupNamingService`.
@@ -225,7 +255,9 @@ WARNING: La politique de groupe permet d'ajouter mais également de retirer des 
 	}
 ----
 
-==== Group_naming_conf
+==== Fichier de configuration politique de nommage des groupes (GroupNaming Conf), 
+_clef de configuration: Group_naming_conf_
+
 Indique l'emplacement du fichier de configuration json attenant.
 
 

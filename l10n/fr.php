@@ -11,7 +11,6 @@ $TRANSLATIONS = array(
 	"Stop If Empty" 	=> "Arrêter l'authentification si jetons invalides",
 	"Single Sign On Url" 			=> "URL de redirection vers IDP",
 	"Single Log Out Url" 			=> "URL de redirection pour déconnexion",
-	"button_name" 		=> "Fédération d'identité",
 	"Tokens Class" 		=> "Classe pour le provisionning utilisateur",
 	"Tokens Conf" 		=> "Fichier de configuration pour le provisionning utilisateur",
 	"GroupNaming Class" => "Classe politique de nommage des groupes",
