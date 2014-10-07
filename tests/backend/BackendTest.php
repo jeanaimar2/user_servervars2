@@ -51,7 +51,21 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 	//   -- CheckPassword tests
 	//
 	//=========================================================================
+
 	public function testCheckPassword() {
+		//__GIVEN__
+		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('jean.gabin@myidp.org');
+
+		//__WHEN__
+		$this->backend->startLoginCycle('jean.gabin@myidp.org');
+		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
+
+		//_THEN__
+		$this->assertEquals('jean.gabin@myidp.org', $returnedValue);
+	}
+
+
+	public function testCheckPasswordWithoutLoginCycle() {
 		//__GIVEN__
 		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('jean.gabin@myidp.org');
 
@@ -59,7 +73,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
 
 		//_THEN__
-		$this->assertEquals('jean.gabin@myidp.org', $returnedValue);
+		$this->assertEquals(false, $returnedValue);
 	}
 
 	public function testCheckPasswordNoUid() {
@@ -67,6 +81,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('jean.gabin@myidp.org');
 
 		//__WHEN__
+		$this->backend->startLoginCycle('jean.gabin@myidp.org');
 		$returnedValue = $this->backend->checkPassword('','mlkdfmuxm');
 
 		//_THEN__
@@ -78,6 +93,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn('another@myidp.org');
 
 		//__WHEN__
+		$this->backend->startLoginCycle('jean.gabin@myidp.org');
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
 
 		//_THEN__
@@ -90,6 +106,7 @@ class UserBackendTest extends \PHPUnit_Framework_TestCase {
 		$this->tokenService->expects($this->any())->method('checkTokens')->willReturn(false);
 
 		//__WHEN__
+		$this->backend->startLoginCycle('jean.gabin@myidp.org');
 		$returnedValue = $this->backend->checkPassword('jean.gabin@myidp.org','mlkdfmuxm');
 
 		//_THEN__
