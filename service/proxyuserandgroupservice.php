@@ -29,13 +29,18 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 	var $config;
 	var $backend;
 	var $groupNamingService;
+	var $emitter;
 
-	function __construct( $userManager, $groupManager, $groupNamingService, $backend, $config ) {
+	function __construct( $userManager, $groupManager, $groupNamingService, $backend, $config, $emitter=null ) {
 		$this->userManager = $userManager;
 		$this->backend = $backend;
 		$this->config = $config;
 		$this->groupNamingService = $groupNamingService;
 		$this->groupManager = $groupManager;
+		if ( is_null($emitter)) {
+			$emitter = UserAndGroupsEmitter::getInstance();
+		}
+		$this->emitter = $emitter;
 	}	
 
 	/**
@@ -84,9 +89,11 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 
 
 	public function updateDisplayName($user, $name) {
-		if ( $name !== $user->getDisplayName() ) {
+		$oldDisplayName =  $user->getDisplayName() ;
+		if ( $name !== $oldDisplayName ) {
 			$user->setDisplayName($name);
 		}
+		$this->emitter->emitPostChangeDisplayName($user->getUID(), $name, $oldDisplayName);
 	}
 
 	// /**
@@ -108,6 +115,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 		if ( $email !== $existingEmail ) {
 			$this->config->setUserValue($uid, 'settings', 'email', $email);
 		}
+		$this->emitter->emitPostChangeMail($uid, $email, $existingEmail);
 	}
 
 	/**
