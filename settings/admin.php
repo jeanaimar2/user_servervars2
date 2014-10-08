@@ -19,26 +19,28 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+
+/**
+* This PHP scripts is used by AppInfo\App to register an admin panel.
+* It sets a bunch of var and calls a template.
+* 
+*/
 use OCA\User_servervars2\Lib\ConfigHelper;
 
 $appName = 'user_servervars2';
 $helper = new ConfigHelper();
 $tmpl = new OCP\Template($appName, 'settings-admin');
-// $tmpl->assign('sso_url', OCP\Config::getAppValue($appName, 'sso_url'));
-// $tmpl->assign('slo_url', OCP\Config::getAppValue($appName, 'slo_url'));
+
 $array = array(
 	'sso_url', 
 	'slo_url',
 	'auto_create_user',
 	'update_user_data',
 	'update_groups',
+	'stop_if_empty',
 	'tokens_class',
 	'tokens_conf',
-	// 'tokens_provider_id',
-	// 'tokens_user_id',
-	// 'tokens_display_name',
-	// 'tokens_email',
-	// 'tokens_groups',
 	'group_naming_conf',
 	'group_naming_class',
 	'button_name'
