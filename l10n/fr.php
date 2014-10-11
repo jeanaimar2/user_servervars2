@@ -16,5 +16,12 @@ $TRANSLATIONS = array(
 	"GroupNaming Class" => "Classe politique de nommage des groupes",
 	"GroupNaming Conf" => "Fichier de configuration politique de nommage des groupes",
 	"Login Button Label"		=> "Libellé du bouton de la page de Login",
-	"Reset your password"	=> "Redéfinissez votre mot de passe"
+	"Reset your password"	=> "Redéfinissez votre mot de passe",
+	"User ID"				=> "Identifiant utilisateur",
+	"Useful Informations For Synchronization"	=> "Informations utiles pour la synchronisation",
+	"Send Email To Reset My Password" => "Envoyer un courriel pour redéfinir mon mot de passe",
+	"Password" => "Mot de passe",
+	"This user ID will be requested to set up synchronization" => "Cet identifiant sera nécessaire pour paramètrer la synchronisation",
+	"It can't be modified" => "Il ne peut être modifié",
+	"If you don't know your password, ask for an email to reset password" => "Si vous ne connaissez pas votre mot de passe, demandez un courriel pour le réinitialiser"
 	);
