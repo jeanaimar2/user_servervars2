@@ -28,6 +28,6 @@
 	<input type="text" id="user" value="<?php p($_['uid']);?>" disabled>
 	</div>
 	<a id="lost-password" class="warning" href="">
-			<?php p($l->t('Forgot your password? Reset it!')); ?>
+			<?php p($l->t('Reset your password')); ?>
 	</a>
 </div>
