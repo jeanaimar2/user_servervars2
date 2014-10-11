@@ -20,10 +20,14 @@
  *
  */
 \OCP\Util::addScript('gtu', 'gtu');
+\OCP\Util::addScript('core', 'lostpassword');
 ?>
 <div class="section">
 	<h2><?php p($l->t('UserId'));?></h2>
 	<div>
-		<?php p($_['uid']);?>
+	<input type="text" id="user" value="<?php p($_['uid']);?>" disabled>
 	</div>
+	<a id="lost-password" class="warning" href="">
+			<?php p($l->t('Forgot your password? Reset it!')); ?>
+	</a>
 </div>

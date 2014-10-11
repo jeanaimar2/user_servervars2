@@ -53,7 +53,7 @@ class ServerVarsHooks {
 		$uid = $user->getUID();
 
 		if ( $uid === $this->tokenService->checkTokens() ) {
-				$justCreatedUser = $uag->provisionUser($uid, $this->tokenService->getTokens() );
+			$justCreatedUser = $uag->provisionUser($uid, $this->tokenService->getTokens() );
 		} 
 	}
 
