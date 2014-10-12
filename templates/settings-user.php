@@ -23,10 +23,10 @@
 \OCP\Util::addScript('core', 'lostpassword');
 ?>
 <div class="section">
-	<h2><?php p($l->t('Useful Informations For Synchronization'));?></h2>
+	<h2><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
 	<div>
 		<label><?php p($l->t('User ID'));?>:</label><input type="text" id="user" value="<?php p($_['uid']);?>">
-		<p><em><?php p($l->t('This user ID will be requested to set up synchronization'));?></em></p>
+		<p><em><?php p($l->t('This user ID will be requested to connect with Login/Password'));?></em></p>
 		<p><em><?php p($l->t("It can't be modified"));?></em></p>
 	</div>
 	<div>

@@ -18,10 +18,10 @@ $TRANSLATIONS = array(
 	"Login Button Label"		=> "Libellé du bouton de la page de Login",
 	"Reset your password"	=> "Redéfinissez votre mot de passe",
 	"User ID"				=> "Identifiant utilisateur",
-	"Useful Informations For Synchronization"	=> "Informations utiles pour la synchronisation",
+	"Useful Informations For Connection With Login/Password"	=> "Informations utiles pour la connexion via utilisateur/mot de passe",
 	"Send Email To Reset My Password" => "Envoyer un courriel pour redéfinir mon mot de passe",
 	"Password" => "Mot de passe",
-	"This user ID will be requested to set up synchronization" => "Cet identifiant sera nécessaire pour paramètrer la synchronisation",
+	"This user ID will be requested to connect with Login/Password" => "Cet identifiant sera nécessaire pour la connexion via utilisateur/mot de passe",
 	"It can't be modified" => "Il ne peut être modifié",
 	"If you don't know your password, ask for an email to reset password" => "Si vous ne connaissez pas votre mot de passe, demandez un courriel pour le réinitialiser"
 	);
