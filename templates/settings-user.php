@@ -19,13 +19,14 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-\OCP\Util::addScript('gtu', 'gtu');
 \OCP\Util::addScript('core', 'lostpassword');
+\OCP\Util::addStyle('user_servervars2', 'user');
 ?>
 <div class="section">
 	<h2><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
 	<div>
-		<label><?php p($l->t('User ID'));?>:</label><input type="text" id="user" value="<?php p($_['uid']);?>">
+		<label><?php p($l->t('User ID'));?>:</label><span class="user_id"><?php p($_['uid']);?></span>
+		<input id="user" type="hidden" value="<?php p($_['uid']);?>">
 		<p><em><?php p($l->t('This user ID will be requested to connect with Login/Password'));?></em></p>
 		<p><em><?php p($l->t("It can't be modified"));?></em></p>
 	</div>
