@@ -42,7 +42,7 @@ $login = array(
 $app->getUserManager()->registerBackend( $c->query('UserBackend'));
 //$app->getGroupManager()->addBackend( new \OC_Group_Database() );
 
-$c->query('ServerVarsHooks')->register( $app->getUserSession());
+//$c->query('ServerVarsHooks')->register( $app->getUserSession());
 $authStatus = $c->isLoggedIn();
 
 // - trigger authentication - 

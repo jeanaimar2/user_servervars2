@@ -31,7 +31,6 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 
 
 	var $tokenService;
-	var $proxiedBackend;
 	var $autoCreateUser;
 	var $updateUserData;
 	var $isUpdateGroups;
@@ -41,17 +40,13 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	var $currentUid = null;
 
 
-	public function __construct(TokenService $tokenService, $config, $backend=null) { //, \OC_User_Interface $proxiedBackend = null
-		$this->tokenService = $tokenService;
-		$this->autoCreateUser = $config->getValue('user_servervars2', 'auto_create_user',false);
-		$this->updateUserData = $config->getValue('user_servervars2', 'update_user',true);
-		$this->isUpdateGroups = $config->getValue('user_servervars2', 'update_groups',true);
-		$this->defaultGroups = false; //$config->getValue('user_servervars2', 'auto_create_user');
-		$this->protectedGroups = false;
-		$this->proxiedBackend = $backend;
-		if ( is_null($this->proxiedBackend) ) {
-			$this->proxiedBackend = new \OC_User_Database();
-		}
+	public function __construct(TokenService $tokenService, $config ) { 
+		$this->tokenService 	= $tokenService;
+		$this->autoCreateUser 	= $config->getValue('user_servervars2', 'auto_create_user',FALSE);
+		$this->updateUserData 	= $config->getValue('user_servervars2', 'update_user',TRUE);
+		$this->isUpdateGroups 	= $config->getValue('user_servervars2', 'update_groups',TRUE);
+		$this->defaultGroups 	= FALSE; 
+		$this->protectedGroups 	= FALSE;
 	}
 
 	/**
@@ -72,12 +67,20 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	* @see \OC\User\manager::checkPassword 
 	*/
 	public function checkPassword($uid, $password) {
-		if ( $uid !== $this->currentUid ) return FALSE;
-
+		if ( $uid !== $this->currentUid ) {
+			return FALSE;
+		}
 		if ( $uid === $this->tokenService->checkTokens() ){
 			return $uid;
 		}
-		return false;
+		return FALSE;
+	}
+
+	/**
+	 * @see User_Backend::userExists
+	*/
+	public function userExists($uid) {
+		return $uid === $this->tokenService->checkTokens();
 	}
 
 	function isAutoCreateUser() {
@@ -87,7 +90,6 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	function isUpdateUserData() {
 		return $this->updateUserData;
 	}
-
 
 	function isUpdateGroups() {
 		return $this->isUpdateGroups;
@@ -100,20 +102,5 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	function getProtectedGroups() {
 		return $this->protectedGroups;
 	}
-
-
-
-	//--------------------------------------------------------------------------
-	// PROXYING
-	//--------------------------------------------------------------------------
-/*	public function implementsActions($actions) {
-		if ( \OC_USER_BACKEND_CHECK_PASSWORD & $actions )  return true;
-		return $this->proxiedBackend->implementsActions($actions);
-	}
-
-	public function __call($name, $arguments) {
-		call_user_func_array(array($this->proxiedBackend, $name), $arguments);
-	}*/
-
 
 }

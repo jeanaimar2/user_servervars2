@@ -31,10 +31,11 @@ class Interceptor {
 	var $throwExceptionToExit = false;
 
 
-	function __construct($appConfig, $tokens, $userAndGroupService, $redirector=null) {
+	function __construct($appConfig, $tokens, $userAndGroupService, $URLGenerator, $redirector=null) {
 		$this->appConfig = $appConfig;
 		$this->tokens = $tokens;
 		$this->uag = $userAndGroupService;
+		$this->nextURL = 'apps/user_servervars2/api/deferred/provisionning';
 		$this->redirector = $redirector;
 		if ( $this->redirector === null ) {
 			$this->redirector = new DefaultRedirector();
@@ -81,7 +82,8 @@ class Interceptor {
 				}
 
 				\OC::$REQUESTEDAPP = '';
-				$this->redirector->redirectToDefaultPage();
+				//$this->redirector->redirectToDefaultPage();
+				$this->redirector->redirectTo( 'apps/user_servervars2/api/deferred/provisionning' );
 			}
 		}
 	}

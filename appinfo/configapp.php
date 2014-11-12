@@ -22,13 +22,7 @@
 namespace OCA\User_Servervars2\AppInfo;
  
 use \OCP\AppFramework\App;
-use \OCA\User_Servervars2\Service\TokenService;
-use \OCA\User_Servervars2\Backend\UserBackend;
-use \OCA\User_Servervars2\Service\TokensFactory;
-use \OCA\User_Servervars2\Service\ProxyUserAndGroupService;
-use \OCA\User_Servervars2\AppInfo\Interceptor;
-use \OCA\User_Servervars2\Hook\ServerVarsHooks;
-use \OCA\User_Servervars2\Controller\SettingsController;
+
 
 
 
@@ -48,7 +42,7 @@ class ConfigApp extends App {
 		});	*/	
 
 		$container->registerService('TokensFactory', function($c) {
-			return new TokensFactory( 
+			return new \OCA\User_Servervars2\Service\TokensFactory( 
 				$c->query('ServerContainer')->getAppConfig()
 				);
 		});
@@ -59,7 +53,7 @@ class ConfigApp extends App {
 		
 		// Service
 		$container->registerService('TokenService', function ($c) {
-			return  new TokenService(
+			return  new \OCA\User_Servervars2\Service\TokenService(
 				$c->query('Tokens')
 			);
 		});
@@ -74,7 +68,7 @@ class ConfigApp extends App {
 
 		// Service
 		$container->registerService('UserAndGroupService', function ($c) {
-			return  new ProxyUserAndGroupService(
+			return  new \OCA\User_Servervars2\Service\ProxyUserAndGroupService(
 				$c->query('ServerContainer')->getUserManager(),
 				$c->query('GroupManager'),
 				$c->query('GroupNamingServiceFactory')->getGroupNamingService(),
@@ -91,16 +85,17 @@ class ConfigApp extends App {
 
 		// Interceptor
 		$container->registerService('Interceptor', function ($c) {
-			return  new Interceptor(
+			return  new \OCA\User_Servervars2\AppInfo\Interceptor(
 				$c->query('ServerContainer')->getAppConfig(),  
 				$c->query('Tokens'),
-				$c->query('UserAndGroupService')
+				$c->query('UserAndGroupService'),
+				$this->getUrlGenerator()
 			);
 		});
 
 		// Hooks
 		$container->registerService('ServerVarsHooks', function ($c) {
-			return  new ServerVarsHooks(
+			return  new \OCA\User_Servervars2\Hook\ServerVarsHooks(
 				$c->query('TokenService'),
 				$c->query('UserAndGroupService'),
 				$c->query('ServerContainer')->getAppConfig()
@@ -109,7 +104,7 @@ class ConfigApp extends App {
 
 		// Backend
 		$container->registerService('UserBackend', function ($c) {
-			return  new UserBackend(		
+			return  new \OCA\User_Servervars2\Backend\UserBackend(		
 				$c->query('TokenService'),
 				$c->query('ServerContainer')->getAppConfig()
 			);
@@ -130,11 +125,21 @@ class ConfigApp extends App {
 
 		// Mappers
 		$container->registerService('SettingsController', function ($c) {
-			return new SettingsController(
+			return new \OCA\User_Servervars2\Controller\SettingsController(
 				$c->query('Request'),
 				$c->query('ServerContainer')->getAppConfig()
 			);
-		});		
+		});	
+
+
+		$container->registerService('DeferredController', function ($c) {
+			return new \OCA\User_Servervars2\Controller\DeferredController(
+				$c->query('Request'),
+				$c->query('TokenService'),
+				$c->query('UserAndGroupService'),
+				$c->query('ServerContainer')->getAppConfig()
+			);
+		});
 
 
 	}
