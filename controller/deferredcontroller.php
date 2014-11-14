@@ -21,19 +21,26 @@
  */
 namespace OCA\User_servervars2\Controller;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\JSONResponse;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCA\User_servervars2\Lib\ConfigHelper;
 use OCP\AppFramework\Http;
 /**
 *
 */
 class DeferredController extends Controller {
+	
+	var $tokenService;
+	var $userAndGroupService;
+	var $redirector;
+	var $appConfig;
+	var $currentUser;
 
-	public function __construct($request, $tokenService, $userAndGroupService, $appConfig, $redirector=null ) {
+	public function __construct($request, $tokenService, $userAndGroupService, $currentUser, $appConfig, $redirector=null ) {
 		parent::__construct('user_servervars2', $request);
 		$this->tokenService = $tokenService;
 		$this->userAndGroupService = $userAndGroupService;
 		$this->redirector = $redirector;
+		$this->currentUser = $currentUser;
 		if ( $this->redirector === null ) {
 			$this->redirector = new \OCA\User_Servervars2\AppInfo\DefaultRedirector();
 		}
@@ -43,19 +50,19 @@ class DeferredController extends Controller {
 
 	/**
 	 * @NoAdminRequired
+	 * @NoCSRFRequired
 	 */
 	public function provisionning() {
-		if ( $uid === $this->tokenService->checkTokens() ){
-			$uag = $this->userAndGroupService;
-			$justCreatedUser = $uag->provisionUser($uid, $this->tokenService->getTokens() );
-			return new TemplateResponse(
-				$this->appName,
-				"provisionning",
-				array()
-			);
-		} else {
-			throw new \Exception("Security problem");
+		$user = $this->currentUser;
+		if (! is_null ( $user )) {
+			$uid = $user->getUID ();
+			if ( null !== $user &&  $uid === $this->tokenService->checkTokens() ){
+					$uag = $this->userAndGroupService;
+					$justCreatedUser = $uag->provisionUser ( $uid, $this->tokenService->getTokens () );
+					return new TemplateResponse ( $this->appName, "provisionning", array () );
+			}
 		}
-
+	
+		throw new \Exception ( "Security problem" );
 	}
 }

@@ -32,7 +32,7 @@ use \OCP\AppFramework\App;
 class ConfigApp extends App {
 
 	public function __construct(array $urlParams=array()){
-		parent::__construct('User_Servervars2', $urlParams);
+		parent::__construct('user_servervars2', $urlParams);
 
 		$container = $this->getContainer();
 
@@ -137,6 +137,7 @@ class ConfigApp extends App {
 				$c->query('Request'),
 				$c->query('TokenService'),
 				$c->query('UserAndGroupService'),
+				$c->getServer()->getUserSession()->getUser(),
 				$c->query('ServerContainer')->getAppConfig()
 			);
 		});

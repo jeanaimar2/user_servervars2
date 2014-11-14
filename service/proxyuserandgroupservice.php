@@ -72,6 +72,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 					$this->updateGroup( 		$user, 	$tokens->getGroupsArray() );
 				}
 			}
+			return $justCreatedUser;
 	}
 
 

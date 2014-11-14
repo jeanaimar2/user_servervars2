@@ -47,11 +47,11 @@ class RemoteTokens implements Tokens {
  	}
 
  	public function getDisplayName(){
- 		return $_SERVER['displayName'];
+ 		return $this->idx($_SERVER, 'displayName');
  	}
 
  	public function getEmail() {
- 		return $_SERVER['mail'];
+ 		return $this->idx($_SERVER, 'mail')
  	}
 
  	public function getGroupsArray() {

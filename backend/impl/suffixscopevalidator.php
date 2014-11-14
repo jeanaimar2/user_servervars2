@@ -50,5 +50,5 @@
  	function endsWith($uid) {
  		$suffix = '@'.$this->scope;
  		return substr($uid, -strlen($suffix)) === $suffix;
- 	};
+ 	}
  }

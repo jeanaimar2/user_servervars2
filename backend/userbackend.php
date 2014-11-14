@@ -22,7 +22,6 @@
 namespace OCA\User_Servervars2\Backend;
 
 use OCA\User_Servervars2\Service\TokenService;
-use OC\AppConfig;
 /**
  * UserBackend 
  *
