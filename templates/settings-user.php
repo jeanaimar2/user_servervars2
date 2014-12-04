@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - 
+ * ownCloud -
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -23,7 +23,7 @@
 \OCP\Util::addStyle('user_servervars2', 'user');
 ?>
 <div class="section">
-	<h2><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
+	<h2><a name="user_servervars2"><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
 	<div>
 		<label><?php p($l->t('User ID'));?>:</label><span class="user_id"><?php p($_['uid']);?></span>
 		<input id="user" type="hidden" value="<?php p($_['uid']);?>">
@@ -36,6 +36,6 @@
 			<?php p($l->t('Send Email To Reset My Password')); ?>
 		</button>
 
-		<p><em><?php p($l->t("If you don't know your password, ask for an email to reset password"));?></em></p>		
+		<p><em><?php p($l->t("If you don't know your password, ask for an email to reset password"));?></em></p>
 	</div>
 </div>
