@@ -29,5 +29,5 @@ class FooBarTokensConfig extends CustomConfig {
 		'tokens_user_id' => 'foo@bar',
 		'tokens_display_name' => 'Foo BAR',
 		'tokens_email' => 'foo@bar.org',
-		'tokens_groups' => array('ou' => array('FooOU'), 'o' => array('barORG'));
+		'tokens_groups' => array('ou' => array('FooOU'), 'o' => array('barORG')));
 }

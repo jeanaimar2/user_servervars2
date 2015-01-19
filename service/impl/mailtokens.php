@@ -21,7 +21,6 @@
  */
 namespace OCA\User_Servervars2\Service\Impl;
 
-use OCA\User_Servervars2\Service\Tokens;
 use OCA\User_Servervars2\Service\Impl\RemoteTokens;
 
 class MailTokens extends RemoteTokens {

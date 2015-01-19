@@ -41,6 +41,7 @@ $array = array(
 	'stop_if_empty',
 	'tokens_class',
 	'tokens_conf',
+	//'tokens_conf_data',
 	'group_naming_conf',
 	'group_naming_class',
 	'button_name'
@@ -49,11 +50,13 @@ $array = array(
 foreach ($array as $key) {
 	$parm = OCP\Config::getAppValue($appName, $key);
 
+	$tmpl->assign($key, $parm);
+	
 	if ( $helper->endsWith($key, 'conf') && $parm) {
 		$tmpl->assign($key.'_data', $helper->getJSon($parm));
 	}
 
-	$tmpl->assign($key, $parm);
+
 }
 
 return $tmpl->fetchPage();
