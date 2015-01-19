@@ -23,7 +23,7 @@
 \OCP\Util::addStyle('user_servervars2', 'user');
 ?>
 <div class="section">
-	<h2><a name="user_servervars2"><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
+	<h2><a name="user_servervars2"></a><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
 	<div>
 		<label><?php p($l->t('User ID'));?>:</label><span class="user_id"><?php p($_['uid']);?></span>
 		<input id="user" type="hidden" value="<?php p($_['uid']);?>">
