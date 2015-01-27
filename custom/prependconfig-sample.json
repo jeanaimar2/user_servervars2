@@ -1,1 +1,1 @@
-{ "separator": "@", "mapping": { "ou":"grp", "o" :"org" } }
+{ "separator": "@", "mapping": { "ou":{"kind":"grp", "defaultValue":"defval1"}, "o" :{"kind":"org", "defaultValue":"defval2"} } }

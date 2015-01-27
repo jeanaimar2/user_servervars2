@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - 
+ * ownCloud -
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -38,13 +38,13 @@ class PrependGroupNamingService implements GroupNamingService {
 		$this->mapping = $mapping;
 		$this->separator = $separator;
 	}
-	
+
 	/**
 	* @param String kind of attribute
 	* @param String value
 	* @return boolean validity of group name according to $kind
 	*/
-	function isValid($groupName){ 
+	function isValid($groupName){
 		if ( empty($this->prefixes)) {
 			$this->buildPrefixes();
 		}
@@ -76,15 +76,19 @@ class PrependGroupNamingService implements GroupNamingService {
 	* @return built name according to rules
 	**/
 	function getName($kind, $value) {
+		if (empty($value)) {
+			return $this->prepend($kind).strtolower($this->mapping[$kind]['defaultValue']);
+		}
+
 		return $this->prepend($kind).strtolower($value);
 	}
 
 	function prepend($kind) {
 		$v = null;
 		if ( isset($this->mapping[$kind])) {
-			$v = $this->mapping[$kind];
+			$v = $this->mapping[$kind]['kind'];
 		} else if(!is_array($this->mapping) ){
-			$v =  $this->mapping;
+			$v =  $this->mapping['kind'];
 		} else {
 			throw new \Exception("Unmanaged kind: $kind");
 		}
