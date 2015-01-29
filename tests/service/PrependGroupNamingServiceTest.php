@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - 
+ * ownCloud -
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -26,10 +26,19 @@ class PrependGroupNammingServiceTest extends \PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->service = new \OCA\User_Servervars2\Service\Impl\PrependGroupNamingService(
-			new  \OCA\User_Servervars2\Lib\CustomConfig( 
-				array( 
-					'separator' => '@', 
-					'mapping' => array('ou'=> 'grp', 'o' => 'org')
+			new  \OCA\User_Servervars2\Lib\CustomConfig(
+				array(
+					'separator' => '@',
+					'mapping' => array(
+						'ou'=> array(
+							'kind'         => 'grp',
+							'defaultValue' => 'defVal',
+						),
+						'o' => array(
+							'kind'         => 'org',
+							'defaultValue' => 'defval2',
+						),
+					),
 				)
 			)
 		);
@@ -42,6 +51,11 @@ class PrependGroupNammingServiceTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetName() {
 		$this->assertEquals('grp@tokyo', $this->service->getName('ou', 'tokyo'));
+	}
+
+	public function testGetNameWithoutValue() {
+		$this->assertEquals('grp@defval', $this->service->getName('ou', ''));
+		$this->assertEquals('org@defval2', $this->service->getName('o', ''));
 	}
 
 	public function testIsValid() {
