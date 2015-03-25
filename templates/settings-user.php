@@ -23,19 +23,19 @@
 \OCP\Util::addStyle('user_servervars2', 'user');
 ?>
 <div class="section">
-	<h2><a name="user_servervars2"></a><?php p($l->t('Useful Informations For Connection With Login/Password'));?></h2>
+	<h2><a name="user_servervars2"></a><?php p($l->t('Useful Informations For Connection With Login / local My CoRe password'));?></h2>
 	<div>
 		<label><?php p($l->t('User ID'));?>:</label><span class="user_id"><?php p($_['uid']);?></span>
 		<input id="user" type="hidden" value="<?php p($_['uid']);?>">
-		<p><em><?php p($l->t('This user ID will be requested to connect with Login/Password'));?></em></p>
+		<p><em><?php p($l->t('This user ID will be requested to connect with Login / local My CoRe password'));?></em></p>
 		<p><em><?php p($l->t("It can't be modified"));?></em></p>
 	</div>
 	<div>
-		<label><?php p($l->t('Password')); ?>:</label>
+		<label><?php p($l->t('Local My CoRe password')); ?>:</label>
 		<button id="lost-password">
 			<?php p($l->t('Send Email To Reset My Password')); ?>
 		</button>
 
-		<p><em><?php p($l->t("If you don't know your password, ask for an email to reset password"));?></em></p>
+		<p><em><?php p($l->t("If you don't know your local My CoRe password, ask for an email to reset password"));?></em></p>
 	</div>
 </div>
