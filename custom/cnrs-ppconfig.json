@@ -1,0 +1,1 @@
+{ "separator": "@", "mapping": { "ou": {"kind":"grp", "defaultValue":"grp99"}, "dr": {"kind":"dr", "defaultValue":"dr99"} } }
