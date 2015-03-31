@@ -24,7 +24,7 @@ namespace OCA\User_Servervars2\Backend;
 use OCA\User_Servervars2\Service\TokenService;
 use OC\AppConfig;
 /**
- * UserBackend 
+ * UserBackend
  *
  */
 class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
@@ -43,9 +43,25 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 
 	public function __construct(TokenService $tokenService, $config, $backend=null) { //, \OC_User_Interface $proxiedBackend = null
 		$this->tokenService = $tokenService;
-		$this->autoCreateUser = $config->getValue('user_servervars2', 'auto_create_user',false);
-		$this->updateUserData = $config->getValue('user_servervars2', 'update_user',true);
-		$this->isUpdateGroups = $config->getValue('user_servervars2', 'update_groups',true);
+
+		$this->autoCreateUser = false;
+		$autoCreateUser = $config->getValue('user_servervars2', 'auto_create_user','false');
+		if ($autoCreateUser !== 'false') {
+				$this->autoCreateUser = true;
+		}
+
+		$this->updateUserData = true;
+		$updateUser = $config->getValue('user_servervars2', 'update_user','true');
+		if ($updateUserData !== 'true') {
+				$this->updateUserData = false;
+		}
+
+		$this->isUpdateGroups = true;
+		$updateGroups = $config->getValue('user_servervars2', 'update_groups','true');
+		if ($updateGroups !== 'true') {
+				$this->isUpdateGroups = false;
+		}
+
 		$this->defaultGroups = false; //$config->getValue('user_servervars2', 'auto_create_user');
 		$this->protectedGroups = false;
 		$this->proxiedBackend = $backend;
@@ -69,7 +85,7 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 	}
 
 	/**
-	* @see \OC\User\manager::checkPassword 
+	* @see \OC\User\manager::checkPassword
 	*/
 	public function checkPassword($uid, $password) {
 		if ( $uid !== $this->currentUid ) return FALSE;
