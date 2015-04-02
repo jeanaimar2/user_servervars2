@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - 
+ * ownCloud -
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -52,17 +52,17 @@
 			</div>
 			<div class="block"><label><?php p($l->t('Tokens Conf'))?></label>
 				<input type="text" name="tokens_conf" value="<?php p($_['tokens_conf'])?>" >
-				<pre id="show_tokens_conf"><?php p($_['tokens_conf_data'])?></pre>
+				<pre id="show_tokens_conf"><?php if (!empty($_['tokens_conf_data'])) { p($_['tokens_conf_data']); } ?></pre>
 			</div>
-		</fieldset>	
+		</fieldset>
 		<fieldset id="usv2tabs-4">
 			<div class="block"><label><?php p($l->t('GroupNaming Class'))?></label><input type="text" name="group_naming_class" value="<?php p($_['group_naming_class'])?>" ></div>
 			<div class="block">
 				<label><?php p($l->t('GroupNaming Conf'))?></label>
 				<input type="text" name="group_naming_conf" value="<?php p($_['group_naming_conf'])?>" >
-				<pre id="show_group_naming_conf"><?php p($_['group_naming_conf_data'])?></pre>			
+				<pre id="show_group_naming_conf"><?php p($_['group_naming_conf_data'])?></pre>
 			</div>
-		</fieldset>		
+		</fieldset>
 		</div>
 	</form>
 	<div id="usv2settingsEcho" class="section"></div>
