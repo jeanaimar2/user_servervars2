@@ -29,16 +29,26 @@ class MailTokens extends RemoteTokens {
  	 * undocumented function
  	 *
  	 * @return user id or false is none
- 	 * @author 
+ 	 * @author
  	 **/
  	public function getUserId() {
  		return $this->idx($_SERVER, 'mail');
  	}
 
  	public function getGroupsArray() {
- 		return array( 'ou' => array($_SERVER['ou']),
- 			'o' => array($_SERVER['o']),
- 			'dr' => array($_SERVER['cnrsDelegation']) );
+        $groups = array();
+
+        if (!empty($_SERVER['ou'])) {
+            $groups['ou'] = array($_SERVER['ou']);
+        }
+        if (!empty($_SERVER['o'])) {
+            $groups['o'] = array($_SERVER['o']);
+        }
+        if (!empty($_SERVER['cnrsDelegation'])) {
+            $groups['dr'] = array($_SERVER['cnrsDelegation']);
+        }
+
+ 		return array( $groups );
  	}
- 	
+
  }
