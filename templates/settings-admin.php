@@ -35,7 +35,7 @@
 			<li><a href="#usv2tabs-4"><?php p($l->t("GroupNaming"));?></a></li>
 		</ul>
 		<fieldset id="usv2tabs-1">
-			<div class="block"><label><?php p($l->t('Auto Create User'))?></label><input type="checkbox" name="auto_create_user" value="1" <?php if($_['auto_create_user']) { p('checked="checked"'); }?> ></div>
+			<div class="block"><label><?php p($l->t('Auto Create User'))?></label><input type="checkbox" name="auto_create_user" value="1" <?php if (empty($_['auto_create_user']) or $_['auto_create_user']!=='false') { p('checked="checked"'); }?> ></div>
 			<div class="block"><label><?php p($l->t('Update User Data'))?></label><input type="checkbox" name="update_user_data" value="1" <?php if($_['update_user_data']) { p('checked="checked"'); }?> ></div>
 			<div class="block"><label><?php p($l->t('Update User Groups'))?></label><input type="checkbox" name="update_groups" value="1" <?php if($_['update_groups']) { p('checked="checked"'); }?> ></div>
 			<div class="block"><label><?php p($l->t('Stop If Empty'))?></label><input type="checkbox" name="stop_if_empty" value="1" <?php if($_['stop_if_empty']) { p('checked="checked"'); }?> ></div>
