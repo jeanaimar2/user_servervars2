@@ -1,4 +1,4 @@
-<?php 
+<?php
 $TRANSLATIONS = array(
 	"Authentication and identification according server's variables" => "Authentification et identification d'après les variables serveur",
 	"General" => "Général",
@@ -18,10 +18,10 @@ $TRANSLATIONS = array(
 	"Login Button Label"		=> "Libellé du bouton de la page de Login",
 	"Reset your password"	=> "Redéfinissez votre mot de passe",
 	"User ID"				=> "Identifiant utilisateur",
-	"Useful Informations For Connection With Login/Password"	=> "Informations utiles pour la connexion via utilisateur/mot de passe",
+	"Useful Informations For Connection With Login / local My CoRe password"	=> "Informations utiles pour la connexion via utilisateur / mot de passe local My CoRe",
 	"Send Email To Reset My Password" => "Envoyer un courriel pour redéfinir mon mot de passe",
-	"Password" => "Mot de passe",
-	"This user ID will be requested to connect with Login/Password" => "Cet identifiant sera nécessaire pour la connexion via utilisateur/mot de passe",
+	"Local My CoRe password" => "Mot de passe local My CoRe",
+	"This user ID will be requested to connect with Login / local My CoRe password" => "Cet identifiant sera nécessaire pour la connexion via utilisateur / mot de passe local My CoRe",
 	"It can't be modified" => "Il ne peut être modifié",
-	"If you don't know your password, ask for an email to reset password" => "Si vous ne connaissez pas votre mot de passe, demandez un courriel pour le réinitialiser"
+	"If you don't know your local My CoRe password, ask for an email to reset password" => "Si vous ne connaissez pas votre mot de passe local My CoRe, demandez un courriel pour le réinitialiser"
 	);
