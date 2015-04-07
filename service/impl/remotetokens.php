@@ -40,7 +40,7 @@ class RemoteTokens implements Tokens {
  	 * undocumented function
  	 *
  	 * @return user id or false is none
- 	 * @author 
+ 	 * @author
  	 **/
  	public function getUserId() {
  		return $this->idx($_SERVER, 'eppn');
@@ -55,7 +55,19 @@ class RemoteTokens implements Tokens {
  	}
 
  	public function getGroupsArray() {
- 		return array( $_SERVER['ou'], $_SERVER['o'], $_SERVER['cnrsDelegation'] );
+        $groups = array();
+
+        if (!empty($_SERVER['ou'])) {
+            $groups['ou'] = array($_SERVER['ou']);
+        }
+        if (!empty($_SERVER['o'])) {
+            $groups['o'] = array($_SERVER['o']);
+        }
+        if (!empty($_SERVER['cnrsDelegation'])) {
+            $groups['dr'] = array($_SERVER['cnrsDelegation']);
+        }
+
+        return $groups;
  	}
  	/**
  	* @param array array

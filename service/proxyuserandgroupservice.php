@@ -1,6 +1,6 @@
 <?php
 /**
- * ownCloud - 
+ * ownCloud -
  *
  * @author Marc DeXeT
  * @copyright 2014 DSI CNRS https://www.dsi.cnrs.fr
@@ -41,10 +41,10 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 			$emitter = UserAndGroupsEmitter::getInstance();
 		}
 		$this->emitter = $emitter;
-	}	
+	}
 
 	/**
-	 * 
+	 *
 	 * @return created user or false
 	 */
 	public function createUser($uid) {
@@ -76,7 +76,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 
 
 	public function isAutoCreateUser() {
-		return $this->backend->isAutoCreateUser(); 
+		return $this->backend->isAutoCreateUser();
 	}
 
 	public function isUpdateUserData() {
@@ -85,7 +85,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 
 	public function isUpdateGroups() {
 		return $this->backend->isUpdateGroups();
-	}	
+	}
 
 
 	public function updateDisplayName($user, $name) {
@@ -119,7 +119,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 	}
 
 	/**
-	* 
+	*
 	* @param String uid
 	* @param Array attr,names array
 	*/
@@ -147,7 +147,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
     	$this->addToGroup($user, $toAddGrps);
     	$this->removeFromGroup($user, $toRemGrps);
 
-	}	
+	}
 
 
 	function getGroupNamesToAdd($groupNames, $oldGroupNames) {
@@ -160,7 +160,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
     	$toAddGrps = array();
    		$toAddGrps = array_diff($oldGroupNames, $groupNames);
    		return $toAddGrps;
-	}	
+	}
 
 
 	function getGroupNames($groupsArray, $naming) {
@@ -211,9 +211,9 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 			if ( $group != null) {
 				$group->removeUser($uid);
 			}
-			
+
 		}
-	}	
+	}
 
 	public function groupExists($group) {
 		return OC_Group::groupExists($group);
