@@ -48,7 +48,7 @@ class MailTokens extends RemoteTokens {
             $groups['dr'] = array($_SERVER['cnrsDelegation']);
         }
 
- 		return array( $groups );
+ 		return $groups;
  	}
 
  }
