@@ -52,7 +52,7 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 
 		$this->updateUserData = true;
 		$updateUser = $config->getValue('user_servervars2', 'update_user','true');
-		if ($updateUserData !== 'true') {
+		if ($updateUser !== 'true') {
 				$this->updateUserData = false;
 		}
 
