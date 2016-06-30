@@ -58,6 +58,7 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 
 
 	public function provisionUser($uid, $tokens) {
+			error_log('servervars2 - service/proxyuserandgroupservice.php provisionUser uid ' . $uid);
 			if ( $this->isAutoCreateUser() ) {
 				$justCreatedUser = $this->createUser($uid);
 			}
@@ -129,23 +130,23 @@ class ProxyUserAndGroupService implements UserAndGroupService {
 		$uid = $user->getUID();
 
 		if (empty($groupsArray) && !empty($defaultGroups)) {
-            $groupsArray = $defaultGroups;
-        }
+            		$groupsArray = $defaultGroups;
+        	}
 
-        $naming = $this->groupNamingService;
+        	$naming = $this->groupNamingService;
 
-        $groupNames = $this->getGroupNames($groupsArray, $naming);
+        	$groupNames = $this->getGroupNames($groupsArray, $naming);
 
 
 		$rawOldGroupIds = $this->groupManager->getUserGroupIds( $user );
-        $oldGroupNames = $this->getOldGroupNames($rawOldGroupIds, $naming);
+        	$oldGroupNames = $this->getOldGroupNames($rawOldGroupIds, $naming);
 
 
-    	$toAddGrps = $this->getGroupNamesToAdd($groupNames, $oldGroupNames);
-    	$toRemGrps = $this->getGroupNamesToRemove($groupNames, $oldGroupNames);
+    		$toAddGrps = $this->getGroupNamesToAdd($groupNames, $oldGroupNames);
+    		$toRemGrps = $this->getGroupNamesToRemove($groupNames, $oldGroupNames);
 
-    	$this->addToGroup($user, $toAddGrps);
-    	$this->removeFromGroup($user, $toRemGrps);
+    		$this->addToGroup($user, $toAddGrps);
+    		$this->removeFromGroup($user, $toRemGrps);
 
 	}
 

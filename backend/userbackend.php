@@ -46,6 +46,7 @@ class UserBackend extends \OC_User_Backend { //implements \OC_User_Interface {
 
 		$this->autoCreateUser = false;
 		$autoCreateUser = $config->getValue('user_servervars2', 'auto_create_user','false');
+		error_log('servervars2 - backend/userbackend.php autoCreateUser ' . $autoCreateUser);
 		if ($autoCreateUser !== 'false') {
 				$this->autoCreateUser = true;
 		}
